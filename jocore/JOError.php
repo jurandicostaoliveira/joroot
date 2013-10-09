@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Joroot Framework | * ERRO</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            body{
+                background: #D5D5D5;
+            }
+            #container{
+                clear: both;
+                width: 900px;
+                margin: 50px auto;
+                background: #FFFFFF;
+            }
+            #top{
+                float: left;
+                width: 900px;
+                margin: 0px;
+                padding: 0px;
+                border-bottom: 2px solid #666666;
+            }
+            #top h1{
+                float: left;
+                margin: 20px;
+                display: inline;
+                font-family: Arial, Helvetica, sans-serif;
+                font-size:30px;
+                font-style: normal;
+                color: #000000;
+            }
+            #center{
+                float: left;
+                width: 860px;
+                margin: 20px;
+                display: inline;
+                text-align: center;
+                font-family: Arial, Helvetica, sans-serif;
+                font-size:14px;
+                color: #993300;
+            }
+            #center a{
+                font-family: Arial, Helvetica, sans-serif;
+                font-size:14px;
+                color: #993300;
+                font-weight: bold;
+                text-decoration: none;
+            }
+            #center a:hover{color:#999999;}	
+            #bottom{
+                clear: both;
+                width: 900px;
+                background: #666666;
+                text-align: center;
+                font-family: Arial, Helvetica, sans-serif;
+                font-size:12px;
+                color: #FFFFFF;
+                padding: 10px 0px;
+            }
+        </style>
+    </head>
+    <body>
+        <!--dvContainer-->
+        <div id="container">
+            <div id="top">
+                <h1>Joroot Framework :: <font color="#990000">Informa!</font></h1>
+            </div>
+            <div id="center">
+                <?php echo $error; ?>
+                <br /><br />
+                <a href="<?php echo ROOT; ?>">
+                    &lt;&lt; voltar para o in&iacute;cio.
+                </a>
+            </div>
+            <div id="bottom">
+                Copyright &copy; Joroot Framework. Todos os direitos reservados.
+            </div>
+        </div>
+        <!--fim dvContainer-->
+    </body>
+</html>
