@@ -181,5 +181,14 @@ abstract class JOController {
         require_once('JODownload.php');
         return new JODownload();
     }
+    
+    /**
+     * Retorna o objeto \JORequest
+     * @return Object 
+     */
+    public static function joRequest() {
+        require_once('JORequest.php');
+        return new JORequest();
+    }
 
 }

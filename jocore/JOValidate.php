@@ -3,7 +3,7 @@
 /**
  * Joroot Framework(PHP)
  * 
- * JOValidate trata entradas de dados, requisicoes, e contra sql injection
+ * JOValidate maximiza validacoes de valores
  *  
  * @autor       Jurandi Costa Oliveira (jurandi@jurandioliveira.com.br)
  * @link        http://www.jurandioliveira.com.br/joroot 
@@ -14,116 +14,6 @@
 class JOValidate {
 
     protected $values = array();
-
-    public function joRequestMethod($method = 'POST', $redirect = ROOT) {
-        if (!($_SERVER['REQUEST_METHOD'] == $method)) {
-            header('Location: ' . $redirect);
-            exit();
-        }
-    }
-
-    protected function joAntiInject($string) {
-        $string = preg_replace("/(select\s|insert\s|update\s|delete\s|truncate\s|drop\s|create\s|alter\s|delimiter\s)|(SELECT\s|INSERT\s|UPDATE\s|DELETE\s|WHERE\s|TRUNCATE\s|DROP\s|CREATE\s|ALTER\s|DELIMITER\s)/", "", $string);
-        $string = trim($string);
-        $string = addslashes($string);
-        //$string = mysql_real_escape_string($string);
-        //$string = htmlentities($string);
-        return $string;
-    }
-
-    protected function joAntiInjectLogin($string) {
-        $string = $this->joAntiInject($string);
-        $string = strip_tags($string);
-        return $string;
-    }
-
-    public function joGetR() {
-        global $JOURL;
-        $get = array();
-        reset($JOURL);
-        while (list($key, $value) = each($JOURL))
-            $get[] = self::joAntiInject($value);
-        return $get;
-    }
-
-    public function joParamR() {
-        global $JOURL;
-        $param = array();
-        reset($JOURL);
-        while (list($key, $value) = each($JOURL)) {
-            if ($key <> 'CONTROLLER' && $key <> 'ACTION')
-                $param[] = self::joAntiInject($value);
-        }
-        return $param;
-    }
-
-    public function joXhrGet() {
-        $string = parse_url($_SERVER['REQUEST_URI']);
-        $exp = explode('&', $string['query']);
-        $count = count($exp);
-        for ($i = 0; $i < $count; $i++) {
-            $value = explode('=', $exp[$i]);
-            $param[] = self::joAntiInject($value[1]);
-        }
-        return $param;
-    }
-
-    public function joPostSimple($name = null) {
-        if (isset($_POST[$name]))
-            return ($_POST[$name]);
-        else
-            return null;
-    }
-
-    public function joPost($name = null) {
-        if (isset($_POST[$name]))
-            return self::joAntiInject($_POST[$name]);
-        else
-            return null;
-    }
-
-    public function joPostR() {
-        $post = array();
-        while (list($key, $value) = each($_POST)) {
-            if (is_array($value)) {
-                while (list($k, $v) = each($value))
-                    $dado[] = self::joAntiInject($v);
-                $post[] = $dado;
-            } else {
-                $post[] = self::joAntiInject($value);
-            }
-        }
-        return $post;
-    }
-
-    public function joPostAssoc() {
-        $post = array();
-        while (list($key, $value) = each($_POST)) {
-            if (is_array($value)) {
-                while (list($k, $v) = each($value))
-                    $post[$key][$k] = self::joAntiInject($v);
-            } else {
-                $post[$key] = self::joAntiInject($value);
-            }
-        }
-        return $post;
-    }
-
-    public function joPostLogin($name = null) {
-        if (isset($_POST[$name]))
-            return self::joAntiInjectLogin($_POST[$name]);
-        else
-            return null;
-    }
-
-    public function joFile() {
-        if ($_FILES) {
-            foreach ($_FILES as $key => $vals)
-                $file[$key] = $vals;
-
-            return $file;
-        }
-    }
 
     public function joSetFieldValue($id = false, $value = null, $type = 'VOID') {
         if ($id)

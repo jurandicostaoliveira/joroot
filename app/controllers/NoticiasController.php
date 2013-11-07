@@ -2,10 +2,10 @@
 
 class NoticiasController extends JOController {
 
-    protected $valid, $model, $upload, $view;
+    protected $request, $model, $upload, $view;
 
     public function __construct() {
-        $this->valid = parent::joValidate();
+        $this->request = parent::joRequest();
         $this->model = parent::joGetModel('Noticias');
         $this->upload = parent::joUpload();
         $this->view = parent::joView();
@@ -22,21 +22,23 @@ class NoticiasController extends JOController {
     }
 
     public function adicionar() {
-        $this->view->joData['dados']['acao'] = 'cadastrar';
-        $this->view->joData['dados']['id'] = 0;
-        $this->view->joData['dados']['titulo'] = null;
-        $this->view->joData['dados']['descricao'] = null;
-        $this->view->joData['dados']['botao'] = 'Cadastrar';
+        $this->view->joData['dados'] = array(
+            'acao' => 'cadastrar',
+            'id' => 0,
+            'titulo' => null,
+            'descricao' => null,
+            'botao' => 'Cadastrar'
+        );
         $this->view->joData['conteudo'] = 'NoticiasForm.php';
         $this->view->joViewIndex();
     }
 
     public function editar() {
-        list($id) = $this->valid->joParamR();
+        $id = $this->request->joParam(1);
         $dados = $this->model->editar($id);
 
         if (!$dados)
-            header('Location: ' . ROOT . 'noticias/listar');
+            $this->request->joRedirect(ROOT . 'noticias/listar');
 
         $this->view->joData['dados'] = $dados;
         $this->view->joData['dados']['acao'] = 'atualizar';
@@ -46,21 +48,21 @@ class NoticiasController extends JOController {
     }
 
     public function cadastrar() {
-        $this->valid->joRequestMethod('POST', ROOT . 'noticias/listar'); //Checa se o acesso veio do POST
-        $dados = $this->valid->joPostAssoc(); //Recuperando os dados vindo do POST ja validados, eh como se fosse $_POST
+        $this->request->joRequestMethod('POST', ROOT . 'noticias/listar'); //Checa se o acesso veio do POST
+        $dados = $this->request->joPosts(); //Recuperando os dados vindo do POST ja validados, eh como se fosse $_POST
         $this->model->cadastrar($dados); //Passando para camada de modelo
         self::jsAlert('Cadastro realizado com sucesso'); //Msg de sucesso 
     }
 
     public function atualizar() {
-        $this->valid->joRequestMethod('POST', ROOT . 'noticias/listar'); //Checa se o acesso veio do POST
-        $dados = $this->valid->joPostAssoc(); //Recuperando os dados vindo do POST ja validados, eh como se fosse $_POST
+        $this->request->joRequestMethod('POST', ROOT . 'noticias/listar'); //Checa se o acesso veio do POST
+        $dados = $this->request->joPosts(); //Recuperando os dados vindo do POST ja validados, eh como se fosse $_POST
         $this->model->atualizar($dados); //Passando para camada de modelo
         self::jsAlert('Atualização feita com sucesso'); //Msg de sucesso 
     }
 
     public function excluir() {
-        list($id) = $this->valid->joParamR();
+        $id = $this->request->joParam(1);
         if ($id > 0) {
             self::excluirImagem($id); //Excluindo a imagem
             $this->model->excluir($id); //Excluindo o registro
@@ -93,8 +95,7 @@ class NoticiasController extends JOController {
      * Apresenta a tela para fazer upload da imagem
      */
     public function editar_imagem() {
-        list($id) = $this->valid->joParamR();
-        $this->view->joData['id'] = $id;
+        $this->view->joData['id'] = $this->request->joParam(1);
         $this->view->joData['conteudo'] = 'NoticiasImagem.php';
         $this->view->joViewIndex();
     }
@@ -105,10 +106,9 @@ class NoticiasController extends JOController {
      */
     public function upload_imagem() {
         try {
-            $this->valid->joRequestMethod('POST', ROOT . 'noticias/listar');
-            $id = $this->valid->joPost('id');
-            $arquivo = $this->valid->joFile();
-            $imagem = $arquivo['imagem']; //
+            $this->request->joRequestMethod('POST', ROOT . 'noticias/listar');
+            $id = $this->request->joPost('id');
+            $imagem = $this->request->joFile('imagem');
 
             $permitidos = array('jpg', 'jpeg', 'gif', 'png');
 
@@ -125,7 +125,7 @@ class NoticiasController extends JOController {
                 throw new Exception('A Imagem foi alterada com sucesso');
             }
 
-            unset($id, $arquivo, $imagem, $permitidos, $novo_nome);
+            unset($id, $imagem, $permitidos, $novo_nome);
         } catch (Exception $e) {
             self::jsAlert($e->getMessage());
         }
