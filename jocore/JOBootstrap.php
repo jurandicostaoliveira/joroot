@@ -21,9 +21,11 @@ class JOBootstrap {
      * Configuracoes das funcionalidades
      * @var array 
      */
-    public $joConfig = array(
+    public $joConfig = array();
+    private $joConfigDefault = array(
         'ROOT' => false,
-        'FILE_DEFAULT' => 'home',
+        'ROUTE_DEFAULT' => 'index',
+        'EXTENSION_VIEW' => 'phtml',
         'MAX_PARAM' => 5,
         'ERROR_REPORTING' => E_ALL,
         'CHARSET' => 'UTF-8',
@@ -36,6 +38,16 @@ class JOBootstrap {
      * @var array
      */
     public $joDb = array();
+    private $joDbDefault = array(
+        'DRIVER' => 'pdo',
+        'SGBD' => 'mysql',
+        'PORT' => 3306,
+        'HOSTNAME' => 'localhost',
+        'USERNAME' => 'root',
+        'PASSWORD' => '',
+        'DATABASE' => NULL,
+        'PERSISTENT' => true
+    );
 
     /**
      * Retorna o erro caso houver um.
@@ -51,20 +63,11 @@ class JOBootstrap {
      * @throws Exception
      */
     private function joConfigDb() {
-        $config = array();
         foreach ($this->joDb as $key => $vals) {
-            if (is_array($vals)) {
-                $config[$key]['DRIVER'] = (isset($vals['DRIVER'])) ? $vals['DRIVER'] : 'pdo';
-                $config[$key]['SGBD'] = (isset($vals['SGBD'])) ? $vals['SGBD'] : 'mysql';
-                $config[$key]['PORT'] = (isset($vals['PORT'])) ? $vals['PORT'] : 3306;
-                $config[$key]['HOSTNAME'] = (isset($vals['HOSTNAME'])) ? $vals['HOSTNAME'] : 'localhost';
-                $config[$key]['USERNAME'] = (isset($vals['USERNAME'])) ? $vals['USERNAME'] : 'username';
-                $config[$key]['PASSWORD'] = (isset($vals['PASSWORD'])) ? $vals['PASSWORD'] : 'password';
-                $config[$key]['DATABASE'] = (isset($vals['DATABASE'])) ? $vals['DATABASE'] : 'database';
-                $config[$key]['PERSISTENT'] = (isset($vals['PERSISTENT'])) ? $vals['PERSISTENT'] : true;
-            }
+            if (is_array($vals))
+                $this->joDb[$key] = array_merge($this->joDbDefault, $this->joDb[$key]);
         }
-        return $config;
+        return $this->joDb;
     }
 
     /**
@@ -76,6 +79,8 @@ class JOBootstrap {
     public function joInit() {
 
         try {
+            $this->joConfig = array_merge($this->joConfigDefault, $this->joConfig);
+            
             /**
              * Seta o charset das paginas
              */
@@ -94,8 +99,9 @@ class JOBootstrap {
              */
             if ((int) substr(phpversion(), 0, 1) < 5)
                 throw new Exception('Suporte apenas, para vers&otilde;es, iguais ou superiores &agrave; 5.0.0');
+            
 
-            $this->joConfig['ROOT'] = ($this->joConfig['ROOT']) ? $this->joConfig['ROOT'] : "http://{$_SERVER['HTTP_HOST']}/joroot/";
+            //$this->joConfig['ROOT'] = ($this->joConfig['ROOT']) ? $this->joConfig['ROOT'] : "http://{$_SERVER['HTTP_HOST']}/joroot/";
             if (substr($this->joConfig['ROOT'], -1) != '/')
                 $this->joConfig['ROOT'] = $this->joConfig['ROOT'] . '/';
 
@@ -103,7 +109,8 @@ class JOBootstrap {
             define('CONTROLLERS', 'app/controllers/');
             define('VIEWS', 'app/views/');
             define('MODELS', 'app/models/');
-            define('FILE_DEFAULT', $this->joConfig['FILE_DEFAULT']);
+            define('ROUTE_DEFAULT', $this->joConfig['ROUTE_DEFAULT']);
+            define('EXTENSION_VIEW', $this->joConfig['EXTENSION_VIEW']);
             define('MAX_PARAM', $this->joConfig['MAX_PARAM']);
             define('SHOW_MSG_ERROR', $this->joConfig['SHOW_MSG_ERROR']);
 
@@ -127,13 +134,13 @@ class JOBootstrap {
              * Configura o controller requisitado e checa a action
              */
             $controller .= 'Controller';
-            $valAction = $start->joAuthAction($controller, $JOURL['ACTION']);
+            $action = $start->joAuthAction($controller, $JOURL['ACTION']);
 
             /**
              * Instacia o objeto e executa o metodo(action)
              */
             $view = new $controller();
-            $view->$valAction();
+            $view->$action();
             /**
              * Envia e apaga o buffer;
              */

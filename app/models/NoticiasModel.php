@@ -10,7 +10,7 @@ class NoticiasModel extends JOModel {
          * Recomendo ultilizar a camada de abstracao PDO e melhor em tudo
          * http://php.net/manual/en/book.pdo.php 
          */
-        $this->db = parent::joConnector('banco1')->joOpen();
+        $this->db = parent::joConnector('BANCO_1')->joOpen();
 
         /**
          * Modelo de conexao usando o velho mysql_connect()
@@ -20,14 +20,14 @@ class NoticiasModel extends JOModel {
 
     public function listar() {
         $qry = $this->db->query("SELECT * FROM tb_noticias");
-        return $qry->fetchAll();
+        return $qry->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function editar($id) {
         $qry = $this->db->prepare("SELECT * FROM tb_noticias WHERE `id` = :id");
         $qry->bindParam(':id', $id, PDO::PARAM_INT);
         $qry->execute();
-        return $qry->fetch();
+        return $qry->fetch(PDO::FETCH_ASSOC);
     }
 
     public function cadastrar(&$dados) {
@@ -62,7 +62,7 @@ class NoticiasModel extends JOModel {
         $qry = $this->db->prepare("SELECT `imagem` FROM tb_noticias WHERE `id` = :id");
         $qry->bindParam(':id', $id, PDO::PARAM_INT);
         $qry->execute();
-        return $qry->fetch();
+        return $qry->fetch(PDO::FETCH_ASSOC);
     }
 
 }

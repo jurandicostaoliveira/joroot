@@ -14,147 +14,112 @@
 class JOSession {
 
     private $index = 'JOROOT';
-    private $id = null;
-    private $name = null;
-    private $login = null;
-    private $password = null;
-    private $access = null;
-    private $status = null;
-    private $token = null;
 
     /**
-     * Retorna o erro caso houver um.
-     * @param String $error
-     * @return Page - Pagina imprimindo a mensagem de erro  
+     * Prepara o um indice para a sessao
+     * @param string $index
+     * @return \JOSession
      */
-    protected static function joError($error = null) {
-        if (!SHOW_MSG_ERROR)
-            $error = 'N&atilde;o entre em p&acirc;nico, pode ser apenas um erro de rota, verifique a URL digitada!';
-        die(include($GLOBALS['JOCOREPATH'] . 'JOError.php'));
-    }
-
-    public function joSessionId($value = null) {
-        $this->id = $value;
-    }
-
-    public function joSessionName($value = null) {
-        $this->name = $value;
-    }
-
-    public function joSessionLogin($value = null) {
-        $this->login = $value;
-    }
-
-    public function joSessionPassword($value = null) {
-        $this->password = $value;
-    }
-
-    public function joSessionAccess($value = null) {
-        $this->access = $value;
-    }
-
-    public function joSessionStatus($value = null) {
-        $this->status = $value;
-    }
-
-    public function joSessionToken($value = null) {
-        $this->token = $value;
-    }
-
-    public function joRecordSession($value = false, $url = ROOT) {
-        try {
-            if ($value)
-                $this->index = $value;
-
-            $_SESSION[$this->index]['ID'] = $this->id;
-            $_SESSION[$this->index]['NAME'] = $this->name;
-            $_SESSION[$this->index]['LOGIN'] = $this->login;
-            $_SESSION[$this->index]['PASSWORD'] = $this->password;
-            $_SESSION[$this->index]['ACCESS'] = $this->access;
-            $_SESSION[$this->index]['STATUS'] = $this->status;
-            $_SESSION[$this->index]['TOKEN'] = $this->token;
-            header('Location:' . $url);
-            exit();
-        } catch (Exception $e) {
-            self::joError('Erro na tentativa de estabelecer uma sess&atilde;o');
-        }
+    public function index($index = 'JOROOT') {
+        $this->index = $index;
+        return $this;
     }
 
     /**
-     * Checagem de logim e senha
-     * @param String $index = Index para controle de sessao
-     * @param String $url = Url para envio caso nao haja as credenciais
-     * @throws Exception retorna para o inicio
+     * Verifica a existencia do indice informado 
+     * @param string $index
+     * @return boolean
      */
-    public function joCheckLogin($index = 'JOROOT', $url = ROOT) {
-        try {
-            if (isset($_SESSION[$index]['LOGIN'], $_SESSION[$index]['PASSWORD'])) {
-                if (($_SESSION[$index]['LOGIN'] == null) && ($_SESSION[$index]['PASSWORD'] == null))
-                    throw new Exception($url);
+    public function isIndex($index = 'JOROOT') {
+        return (isset($_SESSION[$index])) ? true : false;
+    }
+
+    /**
+     * Recupera o valor do indice da sessao
+     * @return int, string, array, boolean etc
+     */
+    public function get() {
+        if (isset($_SESSION[$this->index]))
+            return $_SESSION[$this->index];
+    }
+
+    /**
+     * Persiste o valores
+     * @param int, string, array, boolean etc $value
+     */
+    public function set($value = null) {
+        $_SESSION[$this->index] = $value;
+    }
+
+    /**
+     * Adiciona novos valores
+     * @param int, string, array, boolean etc $value
+     */
+    public function add($value = null) {
+        if (isset($_SESSION[$this->index])) {
+            if (is_array($value)) {
+                $_SESSION[$this->index] = array_merge($_SESSION[$this->index], $value);
             } else {
-                throw new Exception($url);
+                if (is_array($_SESSION[$this->index]))
+                    array_push($_SESSION[$this->index], $value);
+                else
+                    $_SESSION[$this->index] .= $value;
             }
-        } catch (Exception $e) {
-            header('Location: '.$e->getMessage());
         }
     }
 
     /**
-     * Checagem de logim ,senha e nivel de acesso
-     * @param String $index = Index para controle de sessao
-     * @param Array $access = Numero(s) inteiro(s) com o niveil(s) de acesso que for permitido
-     * @param String $url = Url para envio caso nao haja as credenciais
-     * @throws Exception retorna para o inicio
+     * Remove o indice existente
      */
-    public function joCheckAccess($index = 'JOROOT', $access = array(), $url = ROOT) {
-        try {
-            if (isset($_SESSION[$index]['LOGIN'], $_SESSION[$index]['PASSWORD'])) {
-                if (($_SESSION[$index]['LOGIN'] != null) && ($_SESSION[$index]['PASSWORD'] != null)) {
-                    $array_access = (is_array($access)) ? $access : array();
-                    if (!in_array($_SESSION[$index]['ACCESS'], $array_access))
-                        throw new Exception($url);
-                } else {
-                    throw new Exception($url);
-                }
-            } else {
-                throw new Exception($url);
-            }
-        } catch (Exception $e) {
-            header('Location: '.$e->getMessage());
-        }
+    public function remove() {
+        if (isset($_SESSION[$this->index]))
+            unset($_SESSION[$this->index]);
     }
 
     /**
-     * Checagem de logim ,senha e token 
-     * @param String $index = Index para controle de sessao
-     * @param type $token = Tkoen para acesso
-     * @param String $url = Url para envio caso nao haja as credenciais
-     * @throws Exception retorna para o inicio
+     * @Especifico para processo de autenticacao, chega se existe indices criados na sessao 
+     * @param array $value
+     * @return boolean
      */
-    public function joCheckToken($index = 'JOROOT', $token = null, $url = ROOT) {
-        try {
-            if (isset($_SESSION[$index]['LOGIN'], $_SESSION[$index]['PASSWORD'])) {
-                if (($_SESSION[$index]['LOGIN'] != null) && ($_SESSION[$index]['PASSWORD'] != null)) {
-                    if ($token != $_SESSION[$index]['TOKEN'])
-                        throw new Exception($url);
-                } else {
-                    throw new Exception($url);
-                }
-            } else {
-                throw new Exception($url);
+    public function isAuthorized($value = null) {
+        $result = true;
+        if (is_array($value)) {
+            while (list($k, $v) = each($value)) {
+                if (!isset($_SESSION[$this->index][$v]))
+                    $result = false;
             }
-        } catch (Exception $e) {
-           header('Location: '.$e->getMessage());
+        } else if (is_string($value)) {
+            if (!isset($_SESSION[$this->index][$value]))
+                $result = false;
+        }else {
+            $result = false;
         }
+        return $result;
+    }
+
+    /**
+     * Compara a existencia de valor(es) em algum indice da sessao
+     * @param int, string $index
+     * @param array $values
+     * @return boolean
+     */
+    public function in($index = 0, $values = array()) {
+        $result = false;
+        if (isset($_SESSION[$this->index][$index])) {
+            if (is_array($values)) {
+                if (in_array($_SESSION[$this->index][$index], $values))
+                    $result = true;
+            }
+        }
+        return $result;
     }
 
     /**
      * Destroi a sessao
      */
-    public function joLogout($url = ROOT) {
+    public function destroy() {
         session_unset();
         session_destroy();
-        header('Location:' . $url);
     }
 
 }

@@ -15,7 +15,7 @@
  */
 class JOSystem {
 
-    private $url, $getURL, $setUrl;
+    private $url, $getUrl, $setUrl;
 
     /**
      * Retorna uma mensagem de erro amigavel, se caso houver um.
@@ -53,7 +53,7 @@ class JOSystem {
      * Captura os dados passados pela URL.
      */
     public function joSetUrl() {
-        $this->getUrl = isset($_GET['url']) ? $_GET['url'] : FILE_DEFAULT;
+        $this->getUrl = isset($_GET['url']) ? $_GET['url'] : ROUTE_DEFAULT;
         $this->url = (explode('/', $this->getUrl));
     }
 
@@ -104,13 +104,14 @@ class JOSystem {
      */
     public function joAuthAction($controller, $action) {
         try {
+            $action = (empty($action)) ? 'index' : $action;
             if (class_exists($controller)) {
                 if (method_exists($controller, $action))
                     return $action;
                 else
-                    throw new Exception('O M&eacute;todo ' . $action . '(), n&atilde;o foi definido na classe ' . $controller . ' do arquivo ' . CONTROLLERS . $controller . '.php');
+                    throw new Exception('O m&eacute;todo ' . $action . '(), n&atilde;o foi definido na classe ' . $controller . ' do arquivo ' . CONTROLLERS . $controller . '.php');
             } else {
-                throw new Exception('A Classe ' . $controller . ' n&atilde;o foi definida no arquivo ' . CONTROLLERS . $controller . '.php');
+                throw new Exception('A classe ' . $controller . ' n&atilde;o foi definida no arquivo ' . CONTROLLERS . $controller . '.php');
             }
         } catch (Exception $e) {
             self::joError($e->getMessage());

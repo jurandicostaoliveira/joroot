@@ -21,6 +21,7 @@ class JOPaginate {
     private $btnPrev = '&laquo;&nbsp;Anterior&nbsp;';
     private $btnNext = '&nbsp;Pr&oacute;ximo&nbsp;&raquo;';
     private $btnLast = '&nbsp;&Uacute;ltima&nbsp;&raquo;';
+    private $wrapTag = array('open' => null, 'close' => null);
 
     /**
      * O total geral de resultados Ex: 140
@@ -52,6 +53,15 @@ class JOPaginate {
      */
     public function joSetParamPosition($value = 1) {
         $this->numParam = (int) $value;
+    }
+
+    /**
+     * Envolve o link com a tag HTML que for configurada
+     * @param string $open
+     * @param string $close
+     */
+    public function joWrapTag($open = null, $close = null) {
+        $this->wrapTag = array('open' => $open, 'close' => $close);
     }
 
     /**
@@ -92,26 +102,26 @@ class JOPaginate {
 
         $string = null;
         //primeira pagina
-        $string .= "<a href=\"{$url}{$parameters}1\" id=\"joBtnFirst\">{$this->btnFirst}</a>";
+        $string .= "{$this->wrapTag['open']}<a href=\"{$url}{$parameters}1\" id=\"joBtnFirst\">{$this->btnFirst}</a>{$this->wrapTag['close']}";
         for ($i = $convLastParam - $this->limitLinks; $i <= $convLastParam - 1; $i++) {
             if ($i <= 0)
                 continue;
             else
-                $string .= "<a href=\"{$url}{$parameters}{$i}\" class=\"joBtnNav\">{$i}</a>";
+                $string .= "{$this->wrapTag['open']}<a href=\"{$url}{$parameters}{$i}\" class=\"joBtnNav\">{$i}</a>{$this->wrapTag['close']}";
         }
 
         //link ativo
-        $string .= "<a href=\"javascript:void(0)\" id=\"joBtnActive\">{$convLastParam}</a>";
+        $string .= "{$this->wrapTag['open']}<a href=\"javascript:void(0)\" id=\"joBtnActive\">{$convLastParam}</a>{$this->wrapTag['close']}";
 
         for ($i = $convLastParam + 1; $i <= $convLastParam + $this->limitLinks; $i++) {
             if ($i > $pages)
                 continue;
             else
-                $string .= "<a href=\"{$url}{$parameters}{$i}\" class=\"joBtnNav\">{$i}</a>";
+                $string .= "{$this->wrapTag['open']}<a href=\"{$url}{$parameters}{$i}\" class=\"joBtnNav\">{$i}</a>{$this->wrapTag['close']}";
         }
 
         //ultima pagina
-        $string .= "<a href=\"{$url}{$parameters}{$pages}\" id=\"joBtnLast\">{$this->btnLast}</a>";
+        $string .= "{$this->wrapTag['open']}<a href=\"{$url}{$parameters}{$pages}\" id=\"joBtnLast\">{$this->btnLast}</a>{$this->wrapTag['close']}";
         return $string;
     }
 
@@ -128,22 +138,22 @@ class JOPaginate {
         $pages = ceil($this->total / $this->limitPage);
 
         //primeira pagina
-        $firstLink = "<a href=\"{$url}{$parameters}1\" id=\"joBtnFirst\">{$this->btnFirst}</a>";
+        $firstLink = "{$this->wrapTag['open']}<a href=\"{$url}{$parameters}1\" id=\"joBtnFirst\">{$this->btnFirst}</a>{$this->wrapTag['close']}";
 
         //pagina anterior
         $prevPg = $convLastParam - 1;
         $prevLink = null;
         if ($convLastParam > 1)
-            $prevLink = "<a href=\"{$url}{$parameters}{$prevPg}\" id=\"joBtnPrev\">{$this->btnPrev}</a>";
+            $prevLink = "{$this->wrapTag['open']}<a href=\"{$url}{$parameters}{$prevPg}\" id=\"joBtnPrev\">{$this->btnPrev}</a>{$this->wrapTag['close']}";
 
         //proxima pagina     
         $nextPg = $convLastParam + 1;
         $nextLink = null;
         if ($pages > $convLastParam)
-            $nextLink = "<a href=\"{$url}{$parameters}{$nextPg}\" id=\"joBtnNext\">{$this->btnNext}</a>";
+            $nextLink = "{$this->wrapTag['open']}<a href=\"{$url}{$parameters}{$nextPg}\" id=\"joBtnNext\">{$this->btnNext}</a>{$this->wrapTag['close']}";
 
         //ultima pagina    
-        $lastLink = "<a href=\"{$url}{$parameters}{$pages}\" id=\"joBtnLast\">{$this->btnLast}</a>";
+        $lastLink = "{$this->wrapTag['open']}<a href=\"{$url}{$parameters}{$pages}\" id=\"joBtnLast\">{$this->btnLast}</a>{$this->wrapTag['close']}";
 
         $string = "{$firstLink}&nbsp;{$prevLink}&nbsp;{$nextLink}&nbsp;{$lastLink}";
         return $string;

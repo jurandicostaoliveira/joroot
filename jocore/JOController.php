@@ -39,7 +39,7 @@ abstract class JOController {
                     if (class_exists($class)) {
                         return new $class();
                     } else {
-                        throw new Exception('A Classe ' . $class . ' n&atilde;o foi definida no arquivo ' . $controller . 'Controller.php');
+                        throw new Exception('A classe ' . $class . ' n&atilde;o foi definida no arquivo ' . $controller . 'Controller.php');
                     }
                 } else {
                     throw new Exception('N&atilde;o existe o arquivo ' . $controller . 'Controller.php em ' . CONTROLLERS);
@@ -67,7 +67,7 @@ abstract class JOController {
                     if (class_exists($class)) {
                         return new $class();
                     } else {
-                        throw new Exception('A Classe ' . $class . ' n&atilde;o foi definida no arquivo ' . $model . 'Model.php');
+                        throw new Exception('A classe ' . $class . ' n&atilde;o foi definida no arquivo ' . $model . 'Model.php');
                     }
                 } else {
                     throw new Exception('N&atilde;o existe o arquivo ' . $model . 'Model.php em ' . MODELS);

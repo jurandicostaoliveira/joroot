@@ -31,7 +31,7 @@ class JOViews {
      * @param String $var = nome da variavel
      */
     public function joVar($var = null, $return = false) {
-        $value = $return; 
+        $value = $return;
         if (($var != null) && (isset($this->joData[$var])))
             $value = $this->joData[$var];
         return $value;
@@ -43,12 +43,12 @@ class JOViews {
     public function joViewIndex() {
         try {
             global $JOURL;
-            if (file_exists(VIEWS . 'index.php')) {
+            if (file_exists(VIEWS . 'index.' . EXTENSION_VIEW)) {
                 if (is_array($this->joData)) {
                     extract($JOURL);
                     if (count($this->joData) > 0)
                         extract($this->joData);
-                    include_once(VIEWS . 'index.php');
+                    require(VIEWS . 'index.' . EXTENSION_VIEW);
                 }else {
                     throw new Exception('Para enviar dados pela a refer&ecirc;ncia joData, deve ser no formato de ARRAY.');
                 }
@@ -72,7 +72,7 @@ class JOViews {
                         extract($JOURL);
                         if (count($this->joData) > 0)
                             extract($this->joData);
-                        include_once(VIEWS . $file);
+                        require(VIEWS . $file);
                     }else {
                         throw new Exception('Para enviar dados pela a refer&ecirc;ncia joData, deve ser no formato de ARRAY.');
                     }
@@ -99,7 +99,7 @@ class JOViews {
                         extract($JOURL);
                         if (count($this->joData) > 0)
                             extract($this->joData);
-                        include_once($filepath);
+                        require($filepath);
                     }else {
                         throw new Exception('Para enviar dados pela a refer&ecirc;ncia joData, deve ser no formato de ARRAY.');
                     }

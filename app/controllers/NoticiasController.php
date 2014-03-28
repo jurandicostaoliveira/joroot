@@ -16,20 +16,24 @@ class NoticiasController extends JOController {
     }
 
     public function listar() {
-        $this->view->joData['dados'] = $this->model->listar();
-        $this->view->joData['conteudo'] = 'NoticiasListar.php';
+        $this->view->joData = array(
+            'dados' => $this->model->listar(),
+            'conteudo' => 'NoticiasListar.php'
+        );
         $this->view->joViewIndex();
     }
 
     public function adicionar() {
-        $this->view->joData['dados'] = array(
-            'acao' => 'cadastrar',
-            'id' => 0,
-            'titulo' => null,
-            'descricao' => null,
-            'botao' => 'Cadastrar'
+        $this->view->joData = array(
+            'dados' => array(
+                'acao' => 'cadastrar',
+                'id' => 0,
+                'titulo' => null,
+                'descricao' => null,
+                'botao' => 'Cadastrar'
+            ),
+            'conteudo' => 'NoticiasForm.php'
         );
-        $this->view->joData['conteudo'] = 'NoticiasForm.php';
         $this->view->joViewIndex();
     }
 

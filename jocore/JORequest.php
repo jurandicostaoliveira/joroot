@@ -23,7 +23,7 @@ class JORequest {
             exit(0);
         }
     }
-    
+
     /**
      * Verifica e restringe o metodo de entrada na pagina
      * @param string $method
@@ -32,6 +32,14 @@ class JORequest {
     public function joRequestMethod($method = 'POST', $redirect = ROOT) {
         if (!($_SERVER['REQUEST_METHOD'] == $method))
             self::joRedirect($redirect);
+    }
+
+    /**
+     * Verifica se a requisao veio do POST
+     * @return type
+     */
+    public function joIsPost() {
+        return ($_SERVER['REQUEST_METHOD'] == 'POST') ? true : false;
     }
 
     /**
