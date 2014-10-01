@@ -57,7 +57,7 @@ class JOBootstrap
      */
     protected static function joError($error = null)
     {
-        die(include($GLOBALS['JOCOREPATH'] . 'JOError.php'));
+        die(require_once($GLOBALS['JOCOREPATH'] . 'JOError.php'));
     }
 
     /**
