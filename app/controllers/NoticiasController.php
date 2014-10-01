@@ -1,21 +1,25 @@
 <?php
 
-class NoticiasController extends JOController {
+class NoticiasController extends JOController
+{
 
     protected $request, $model, $upload, $view;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->request = parent::joRequest();
         $this->model = parent::joGetModel('Noticias');
         $this->upload = parent::joUpload();
         $this->view = parent::joView();
     }
 
-    public function index() {
+    public function index()
+    {
         self::listar(); //tecnica para deixa como default a action listar
     }
 
-    public function listar() {
+    public function listar()
+    {
         $this->view->joData = array(
             'dados' => $this->model->listar(),
             'conteudo' => 'NoticiasListar.php'
@@ -23,7 +27,8 @@ class NoticiasController extends JOController {
         $this->view->joViewIndex();
     }
 
-    public function adicionar() {
+    public function adicionar()
+    {
         $this->view->joData = array(
             'dados' => array(
                 'acao' => 'cadastrar',
@@ -37,12 +42,14 @@ class NoticiasController extends JOController {
         $this->view->joViewIndex();
     }
 
-    public function editar() {
+    public function editar()
+    {
         $id = $this->request->joParam(1);
         $dados = $this->model->editar($id);
 
-        if (!$dados)
+        if (!$dados){
             $this->request->joRedirect(ROOT . 'noticias/listar');
+        }
 
         $this->view->joData['dados'] = $dados;
         $this->view->joData['dados']['acao'] = 'atualizar';
@@ -51,21 +58,24 @@ class NoticiasController extends JOController {
         $this->view->joViewIndex();
     }
 
-    public function cadastrar() {
+    public function cadastrar()
+    {
         $this->request->joRequestMethod('POST', ROOT . 'noticias/listar'); //Checa se o acesso veio do POST
         $dados = $this->request->joPosts(); //Recuperando os dados vindo do POST ja validados, eh como se fosse $_POST
         $this->model->cadastrar($dados); //Passando para camada de modelo
         self::jsAlert('Cadastro realizado com sucesso'); //Msg de sucesso 
     }
 
-    public function atualizar() {
+    public function atualizar()
+    {
         $this->request->joRequestMethod('POST', ROOT . 'noticias/listar'); //Checa se o acesso veio do POST
         $dados = $this->request->joPosts(); //Recuperando os dados vindo do POST ja validados, eh como se fosse $_POST
         $this->model->atualizar($dados); //Passando para camada de modelo
         self::jsAlert('Atualização feita com sucesso'); //Msg de sucesso 
     }
 
-    public function excluir() {
+    public function excluir()
+    {
         $id = $this->request->joParam(1);
         if ($id > 0) {
             self::excluirImagem($id); //Excluindo a imagem
@@ -81,24 +91,28 @@ class NoticiasController extends JOController {
      * Para excluir a imagem
      * @param int $id
      */
-    protected function excluirImagem($id) {
+    protected function excluirImagem($id)
+    {
         $nome = $this->model->imagemNome($id);
-        if ($nome['imagem'] != 'temp.png')
+        if ($nome['imagem'] != 'temp.png'){
             $this->upload->joRemoveFile('lib/images/' . $nome['imagem']);
+        }
     }
 
     /**
      * Execulta um alert com mensagem de erro 
      * @param type $msg
      */
-    protected function jsAlert($msg) {
+    protected function jsAlert($msg)
+    {
         echo "<script>alert('{$msg}'); window.location.href = '" . ROOT . "noticias/listar';</script>";
     }
 
     /**
      * Apresenta a tela para fazer upload da imagem
      */
-    public function editar_imagem() {
+    public function editar_imagem()
+    {
         $this->view->joData['id'] = $this->request->joParam(1);
         $this->view->joData['conteudo'] = 'NoticiasImagem.php';
         $this->view->joViewIndex();
@@ -108,7 +122,8 @@ class NoticiasController extends JOController {
      * Faz verificacoes, redimensionamento e upload da imagem
      * @throws Exception
      */
-    public function upload_imagem() {
+    public function upload_imagem()
+    {
         try {
             $this->request->joRequestMethod('POST', ROOT . 'noticias/listar');
             $id = $this->request->joPost('id');

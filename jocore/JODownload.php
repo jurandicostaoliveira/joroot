@@ -11,7 +11,8 @@
  * @versao      1.2.0
  * @licenca     Gratuito para estudo, desenvolvimento e contribuicao
  */
-class JODownload {
+class JODownload
+{
 
     private $joPath = null;
 
@@ -20,21 +21,25 @@ class JODownload {
      * @param String $error
      * @return Page - Pagina imprimindo a mensagem de erro  
      */
-    protected static function joError($error = null) {
-        if (!SHOW_MSG_ERROR)
+    protected static function joError($error = null)
+    {
+        if (!SHOW_MSG_ERROR) {
             $error = 'N&atilde;o entre em p&acirc;nico, pode ser apenas um erro de rota, verifique a URL digitada!';
-        die(include($GLOBALS['JOCOREPATH'] . 'JOError.php'));
+        }
+        die(require_once($GLOBALS['JOCOREPATH'] . 'JOError.php'));
     }
 
     /**
      * Indica o caminho caminho da pasta onde se encontra o arquivo 
      * @param String $path = Ex: 'lib/images/'
      */
-    public function joSetPath($path = false) {
+    public function joSetPath($path = false)
+    {
         if ($path) {
             $this->joPath = $path;
-            if (substr($this->joPath, -1) <> '/')
+            if (substr($this->joPath, -1) <> '/') {
                 $this->joPath = $this->joPath . '/';
+            }
         }
     }
 
@@ -43,7 +48,8 @@ class JODownload {
      * @param String $file = Ex:'imagem.jpg'
      * @throws Exception
      */
-    public function joSetDownload($file = false) {
+    public function joSetDownload($file = false)
+    {
         try {
             if ($file) {
                 if (file_exists($this->joPath . $file)) {

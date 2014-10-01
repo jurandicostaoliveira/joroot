@@ -13,7 +13,8 @@
  * @versao      1.2.0
  * @licenca     Gratuito para estudo, desenvolvimento e contribuicao
  */
-class JOSystem {
+class JOSystem
+{
 
     private $url, $getUrl, $setUrl;
 
@@ -22,10 +23,12 @@ class JOSystem {
      * @param String $error
      * @return HTML 
      */
-    protected static function joError($error = null) {
-        if (!SHOW_MSG_ERROR)
+    protected static function joError($error = null)
+    {
+        if (!SHOW_MSG_ERROR) {
             $error = 'N&atilde;o entre em p&acirc;nico, pode ser apenas um erro de rota, verifique a URL digitada!';
-        die(include($GLOBALS['JOCOREPATH'] . 'JOError.php'));
+        }
+        die(require_once($GLOBALS['JOCOREPATH'] . 'JOError.php'));
     }
 
     /**
@@ -52,7 +55,8 @@ class JOSystem {
     /**
      * Captura os dados passados pela URL.
      */
-    public function joSetUrl() {
+    public function joSetUrl()
+    {
         $this->getUrl = isset($_GET['url']) ? $_GET['url'] : ROUTE_DEFAULT;
         $this->url = (explode('/', $this->getUrl));
     }
@@ -60,13 +64,15 @@ class JOSystem {
     /**
      * Trata o controller em execucao.
      */
-    protected function joGetController() {
+    protected function joGetController()
+    {
         try {
             $strRpl = str_replace('-', '_', $this->url[0]);
-            if (file_exists(CONTROLLERS . ucfirst($strRpl) . 'Controller.php'))
+            if (file_exists(CONTROLLERS . ucfirst($strRpl) . 'Controller.php')) {
                 return $strRpl;
-            else
+            } else {
                 throw new Exception('N&atilde;o existe o arquivo ' . ucfirst($strRpl) . 'Controller.php em ' . CONTROLLERS);
+            }
         } catch (Exception $e) {
             self::joError($e->getMessage());
         }
@@ -75,23 +81,26 @@ class JOSystem {
     /**
      * Trata a action em execucao.
      */
-    protected function joGetAction() {
+    protected function joGetAction()
+    {
         return isset($this->url[1]) ? str_replace('-', '_', $this->url[1]) : 'index';
     }
 
     /**
      * Monta e retorna um array com os valores que foram passados pela URL, em formato de variaveis globais
      */
-    public function joGetUrl() {
+    public function joGetUrl()
+    {
         $this->setUrl['CONTROLLER'] = self::joGetController();
         $this->setUrl['ACTION'] = self::joGetAction();
         $maxParam = intval(MAX_PARAM) + 1;
         //Montagem dos parametros
         for ($i = 1; $i < $maxParam; ++$i) {
-            if (isset($this->url[$i + 1]))
+            if (isset($this->url[$i + 1])) {
                 $this->setUrl['PARAM' . $i] = $this->url[$i + 1];
-            else
+            } else {
                 $this->setUrl['PARAM' . $i] = 0;
+            }
         }
         return $this->setUrl;
     }
@@ -102,14 +111,16 @@ class JOSystem {
      * @param String $action
      * @return Object 
      */
-    public function joAuthAction($controller, $action) {
+    public function joAuthAction($controller, $action)
+    {
         try {
             $action = (empty($action)) ? 'index' : $action;
             if (class_exists($controller)) {
-                if (method_exists($controller, $action))
+                if (method_exists($controller, $action)) {
                     return $action;
-                else
+                } else {
                     throw new Exception('O m&eacute;todo ' . $action . '(), n&atilde;o foi definido na classe ' . $controller . ' do arquivo ' . CONTROLLERS . $controller . '.php');
+                }
             } else {
                 throw new Exception('A classe ' . $controller . ' n&atilde;o foi definida no arquivo ' . CONTROLLERS . $controller . '.php');
             }
@@ -119,4 +130,3 @@ class JOSystem {
     }
 
 }
-

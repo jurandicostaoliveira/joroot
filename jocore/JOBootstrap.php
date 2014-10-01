@@ -13,9 +13,10 @@
  */
 $JOURL = array();
 $JODB = array();
-$JOCOREPATH = realpath(dirname(__FILE__)) . DIRECTORY_SEPARATOR;
+$JOCOREPATH = __DIR__ . DIRECTORY_SEPARATOR;
 
-class JOBootstrap {
+class JOBootstrap
+{
 
     /**
      * Configuracoes das funcionalidades
@@ -54,7 +55,8 @@ class JOBootstrap {
      * @param String $error
      * @return Page - Pagina que imprime a mensagem de erro  
      */
-    protected static function joError($error = null) {
+    protected static function joError($error = null)
+    {
         die(include($GLOBALS['JOCOREPATH'] . 'JOError.php'));
     }
 
@@ -62,10 +64,12 @@ class JOBootstrap {
      * Dados para efetuar as configuracoes do banco de dados
      * @throws Exception
      */
-    private function joConfigDb() {
+    private function joConfigDb()
+    {
         foreach ($this->joDb as $key => $vals) {
-            if (is_array($vals))
+            if (is_array($vals)) {
                 $this->joDb[$key] = array_merge($this->joDbDefault, $this->joDb[$key]);
+            }
         }
         return $this->joDb;
     }
@@ -76,11 +80,11 @@ class JOBootstrap {
      * Armazena os dados de saida no buffer	
      * Exibe ou esconde os erros, conforme for configurado 
      */
-    public function joInit() {
-
+    public function joInit()
+    {
         try {
             $this->joConfig = array_merge($this->joConfigDefault, $this->joConfig);
-            
+
             /**
              * Seta o charset das paginas
              */
@@ -97,13 +101,14 @@ class JOBootstrap {
             /**
              * Verifica a versao do php
              */
-            if ((int) substr(phpversion(), 0, 1) < 5)
+            if ((int) substr(phpversion(), 0, 1) < 5) {
                 throw new Exception('Suporte apenas, para vers&otilde;es, iguais ou superiores &agrave; 5.0.0');
-            
+            }
 
             //$this->joConfig['ROOT'] = ($this->joConfig['ROOT']) ? $this->joConfig['ROOT'] : "http://{$_SERVER['HTTP_HOST']}/joroot/";
-            if (substr($this->joConfig['ROOT'], -1) != '/')
+            if (substr($this->joConfig['ROOT'], -1) != '/') {
                 $this->joConfig['ROOT'] = $this->joConfig['ROOT'] . '/';
+            }
 
             define('ROOT', $this->joConfig['ROOT']);
             define('CONTROLLERS', 'app/controllers/');

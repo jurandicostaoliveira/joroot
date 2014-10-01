@@ -11,24 +11,28 @@
  * @versao      1.2.0
  * @licenca     Gratuito para estudo, desenvolvimento e contribuicao
  */
-abstract class JOModel {
+abstract class JOModel
+{
 
     /**
      * Retorna o erro caso houver um.
      * @param String $error
      * @return HTML 
      */
-    protected static function joError($error = null) {
-        if (!SHOW_MSG_ERROR)
+    protected static function joError($error = null)
+    {
+        if (!SHOW_MSG_ERROR) {
             $error = 'N&atilde;o entre em p&acirc;nico, pode ser apenas um erro de rota, verifique a URL digitada!';
-        die(include($GLOBALS['JOCOREPATH'] . 'JOError.php'));
+        }
+        die(require_once($GLOBALS['JOCOREPATH'] . 'JOError.php'));
     }
 
     /**
      * Conexao com o banco de dados
      * @throws Exception  
      */
-    public function joConnector($index = false) {
+    public function joConnector($index = false)
+    {
         try {
             if ($index) {
                 global $JODB;
@@ -63,7 +67,8 @@ abstract class JOModel {
      * @param Int $numParam = posicao do parametro da URL, responsavel pela contabilizacao das paginas
      * @return String
      */
-    public function joLimitPaginate($limitPage = 25, $numParam = 1) {
+    public function joLimitPaginate($limitPage = 25, $numParam = 1)
+    {
         $end = 1;
         if ($GLOBALS['JOURL']['PARAM' . $numParam]) {
             $param = (int) $GLOBALS['JOURL']['PARAM' . $numParam];

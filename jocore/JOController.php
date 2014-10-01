@@ -11,17 +11,20 @@
  * @versao      1.2.0
  * @licenca     Gratuito para estudo, desenvolvimento e contribuicao
  */
-abstract class JOController {
+abstract class JOController
+{
 
     /**
      * Retorna o erro caso houver um.
      * @param String $error
      * @return Page - Pagina imprimindo a mensagem de erro  
      */
-    protected static function joError($error = null) {
-        if (!SHOW_MSG_ERROR)
+    protected static function joError($error = null)
+    {
+        if (!SHOW_MSG_ERROR) {
             $error = 'N&atilde;o entre em p&acirc;nico, pode ser apenas um erro de rota, verifique a URL digitada!';
-        die(include($GLOBALS['JOCOREPATH'] . 'JOError.php'));
+        }
+        die(require_once($GLOBALS['JOCOREPATH'] . 'JOError.php'));
     }
 
     /**
@@ -30,12 +33,13 @@ abstract class JOController {
      * @return Objetc class - O objeto retornado
      * @throws Exception - caso houver imprime o erro na tela  
      */
-    public static function joGetController($controller = false) {
+    public static function joGetController($controller = false)
+    {
         try {
             if ($controller) {
                 $class = ucfirst($controller) . 'Controller';
                 if (file_exists(CONTROLLERS . $class . '.php')) {
-                    include(CONTROLLERS . $class . '.php');
+                    require_once(CONTROLLERS . $class . '.php');
                     if (class_exists($class)) {
                         return new $class();
                     } else {
@@ -58,12 +62,13 @@ abstract class JOController {
      * @return Object - O objeto retornado 
      * @throws Exception - caso houver imprime o erro na tela  
      */
-    public static function joGetModel($model = false) {
+    public static function joGetModel($model = false)
+    {
         try {
             if ($model) {
                 $class = ucfirst($model) . 'Model';
                 if (file_exists(MODELS . $class . '.php')) {
-                    include(MODELS . $class . '.php');
+                    require_once(MODELS . $class . '.php');
                     if (class_exists($class)) {
                         return new $class();
                     } else {
@@ -84,7 +89,8 @@ abstract class JOController {
      * Retorna o objeto \JOViews
      * @return Object  
      */
-    public static function joView() {
+    public static function joView()
+    {
         require_once('JOViews.php');
         return new JOViews();
     }
@@ -93,7 +99,8 @@ abstract class JOController {
      * Retorna o objeto \JOSession
      * @return Object 
      */
-    public static function joSession() {
+    public static function joSession()
+    {
         require_once('JOSession.php');
         return new JOSession();
     }
@@ -102,7 +109,8 @@ abstract class JOController {
      * Retorna o objeto \JOValidate
      * @return Object 
      */
-    public static function joValidate() {
+    public static function joValidate()
+    {
         require_once('JOValidate.php');
         return new JOValidate();
     }
@@ -111,7 +119,8 @@ abstract class JOController {
      * Retorna o objeto \JOPaginate
      * @return Object 
      */
-    public static function joPaginate() {
+    public static function joPaginate()
+    {
         require_once('JOPaginate.php');
         return new JOPaginate();
     }
@@ -120,7 +129,8 @@ abstract class JOController {
      * Retorna o objeto \JOResize
      * @return Object 
      */
-    public static function joUpload() {
+    public static function joUpload()
+    {
         require_once('JOUpload.php');
         return new JOUpload();
     }
@@ -129,7 +139,8 @@ abstract class JOController {
      * Retorna o objeto \JOResize
      * @return Object 
      */
-    public static function joLog() {
+    public static function joLog()
+    {
         require_once('JOLog.php');
         return new JOLog();
     }
@@ -138,7 +149,8 @@ abstract class JOController {
      * Retorna o objeto \JOMail
      * @return Object 
      */
-    public static function joMail() {
+    public static function joMail()
+    {
         require_once('JOMail.php');
         return new JOMail();
     }
@@ -148,7 +160,8 @@ abstract class JOController {
      * @param String $path - caminho completo para encontrar a api
      * @throws Exception - caso houver imprime o erro na tela  
      */
-    public static function joApiExternal($path = false) {
+    public static function joApiExternal($path = false)
+    {
         try {
             if ($path) {
                 if (file_exists($path)) {
@@ -168,7 +181,8 @@ abstract class JOController {
      * Retorna o objeto \JOHtml
      * @return Object 
      */
-    public static function joHtml() {
+    public static function joHtml()
+    {
         require_once('JOHtml.php');
         return new JOHtml();
     }
@@ -177,16 +191,18 @@ abstract class JOController {
      * Retorna o objeto \JODownload
      * @return Object 
      */
-    public static function joDownload() {
+    public static function joDownload()
+    {
         require_once('JODownload.php');
         return new JODownload();
     }
-    
+
     /**
      * Retorna o objeto \JORequest
      * @return Object 
      */
-    public static function joRequest() {
+    public static function joRequest()
+    {
         require_once('JORequest.php');
         return new JORequest();
     }

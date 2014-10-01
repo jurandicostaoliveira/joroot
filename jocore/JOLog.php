@@ -11,7 +11,8 @@
  * @versao      1.2.0
  * @licenca     Gratuito para estudo, desenvolvimento e contribuicao
  */
-class JOLog {
+class JOLog
+{
 
     private $nameDir = 'log/';
 
@@ -25,19 +26,23 @@ class JOLog {
     /**
      * Verifica a existencia da nome no arquivo. 
      */
-    public function joSetNameLog($name = null) {
-        if ($name != null)
+    public function joSetNameLog($name = null)
+    {
+        if ($name != null) {
             $this->joNameLog = $name;
+        }
 
-        if (!file_exists($this->nameDir))
+        if (!file_exists($this->nameDir)) {
             mkdir($this->nameDir, 0777);
+        }
     }
 
     /**
      * Cria, e escreve no arquivo
      * @param String $msgLog = mensagem de personalizacao : email@email.com.br
      */
-    public function joWriteLog($msgLog = null) {
+    public function joWriteLog($msgLog = null)
+    {
 
         $this->fp = fopen($this->nameDir . $this->joNameLog, "a");
         $this->text = "[" . date('d/m/Y H:i:s') . "] - " . $msgLog . "\n";
@@ -57,13 +62,15 @@ class JOLog {
      * @return array
      * @throws Exception 
      */
-    public function joReadLog() {
+    public function joReadLog()
+    {
         try {
             if ($this->joNameLog) {
-                if (file_exists($this->nameDir . $this->joNameLog))
+                if (file_exists($this->nameDir . $this->joNameLog)) {
                     $this->logArray = file($this->nameDir . $this->joNameLog);
-                else
+                } else {
                     throw new Exception('Nenhum log, foi encontrado com esse nome .: ' . $this->joNameLog);
+                }
             } else {
                 throw new Exception('Informe o nome do log que deseja visualizar');
             }
@@ -78,7 +85,8 @@ class JOLog {
      * @return array
      * @throws Exception 
      */
-    public function joCleanLog() {
+    public function joCleanLog()
+    {
         try {
             if ($this->joNameLog) {
                 if (file_exists($this->nameDir . $this->joNameLog)) {

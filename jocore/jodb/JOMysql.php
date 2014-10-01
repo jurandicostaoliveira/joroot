@@ -11,12 +11,14 @@
  * @versao      1.2.0
  * @licenca     Gratuito para estudo, desenvolvimento e contribuicao
  */
-class JOMysql {
+class JOMysql
+{
 
     private $hostname, $username, $password, $database;
     private $conn, $select, $query;
 
-    public function __construct($index, $JODB) {
+    public function __construct($index, $JODB)
+    {
         $this->hostname = $JODB[$index]['HOSTNAME'];
         $this->username = $JODB[$index]['USERNAME'];
         $this->password = $JODB[$index]['PASSWORD'];
@@ -29,17 +31,20 @@ class JOMysql {
      * @param String $error
      * @return HTML 
      */
-    protected static function joError($error) {
-        if (!SHOW_MSG_ERROR)
+    protected static function joError($error)
+    {
+        if (!SHOW_MSG_ERROR){
             $error = 'N&atilde;o entre em p&acirc;nico, pode ser apenas um erro de rota, verifique a URL digitada!';
-        die(include($GLOBALS['JOCOREPATH'] . 'JOError.php'));
+        }
+        die(require_once($GLOBALS['JOCOREPATH'] . 'JOError.php'));
     }
 
     /**
      * Conexao com o banco de dados
      * @throws Exception  
      */
-    private function joOpen() {
+    private function joOpen()
+    {
         try {
             $this->conn = @mysql_connect($this->hostname, $this->username, $this->password);
             if ($this->conn) {
@@ -60,7 +65,8 @@ class JOMysql {
      * Execulta a query
      * @param String $sql 
      */
-    public function joQuery($sql = null) {
+    public function joQuery($sql = null)
+    {
         if ($sql) {
             $this->query = @mysql_query($sql);
             if (!$this->query) {
@@ -74,7 +80,8 @@ class JOMysql {
     /**
      * Verifica se ha algum erro na query, se sim, mostra o erro e intermope o restante da acao 
      */
-    public function joDebugQuery() {
+    public function joDebugQuery()
+    {
         if (isset($this->query['error'])) {
             echo $this->query['error'];
         } else {
@@ -87,18 +94,21 @@ class JOMysql {
      * Retorna o array da consulta ou mysql_error
      * @return array $result 
      */
-    public function joFetchAll() {
+    public function joFetchAll()
+    {
         if ($this->query['error']) {
             $result['error'] = $this->query['error'];
         } else {
             $result = array();
-            while ($line = $this->joFetchArray())
+            while ($line = $this->joFetchArray()){
                 $result[] = $line;
+            }
         }
         return $result;
     }
 
-    public function joNumRows() {
+    public function joNumRows()
+    {
         if ($this->query['error']) {
             return $this->query['error'];
         } else {
@@ -106,7 +116,8 @@ class JOMysql {
         }
     }
 
-    public function joFetchArray() {
+    public function joFetchArray()
+    {
         if ($this->query['error']) {
             return $this->query['error'];
         } else {
@@ -114,7 +125,8 @@ class JOMysql {
         }
     }
 
-    public function joFetchAssoc() {
+    public function joFetchAssoc()
+    {
         if ($this->query['error']) {
             return $this->query['error'];
         } else {
@@ -122,11 +134,13 @@ class JOMysql {
         }
     }
 
-    public function joListTables($sql) {
+    public function joListTables($sql)
+    {
         return @mysql_list_tables($sql);
     }
 
-    public function joFetchRow() {
+    public function joFetchRow()
+    {
         if ($this->query['error']) {
             return $this->query['error'];
         } else {
@@ -134,7 +148,8 @@ class JOMysql {
         }
     }
 
-    public function joFetchObject() {
+    public function joFetchObject()
+    {
         if ($this->query['error']) {
             return $this->query['error'];
         } else {
@@ -142,7 +157,8 @@ class JOMysql {
         }
     }
 
-    public function joInsertId() {
+    public function joInsertId()
+    {
         if ($this->query['error']) {
             return $this->query['error'];
         } else {
@@ -150,15 +166,18 @@ class JOMysql {
         }
     }
 
-    public function joFreeResult() {
+    public function joFreeResult()
+    {
         return @mysql_free_result($this->query);
     }
 
-    public function joClose() {
+    public function joClose()
+    {
         return @mysql_close($this->conn);
     }
 
-    public function __destruct() {
+    public function __destruct()
+    {
         $this->joClose($this->conn);
     }
 

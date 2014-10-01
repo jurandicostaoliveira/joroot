@@ -11,7 +11,8 @@
  * @versao      1.2.0
  * @licenca     Gratuito para estudo, desenvolvimento e contribuicao
  */
-class JOViews {
+class JOViews
+{
 
     public $joData = array();
 
@@ -20,36 +21,42 @@ class JOViews {
      * @param String $error
      * @return Page - Pagina imprimindo a mensagem de erro  
      */
-    protected static function joError($error = null) {
-        if (!SHOW_MSG_ERROR)
+    protected static function joError($error = null)
+    {
+        if (!SHOW_MSG_ERROR) {
             $error = 'N&atilde;o entre em p&acirc;nico, pode ser apenas um erro de rota, verifique a URL digitada!';
-        die(include($GLOBALS['JOCOREPATH'] . 'JOError.php'));
+        }
+        die(require_once($GLOBALS['JOCOREPATH'] . 'JOError.php'));
     }
 
     /**
      * Recupera variaveis referenciada pela joData[] 
      * @param String $var = nome da variavel
      */
-    public function joVar($var = null, $return = false) {
+    public function joVar($var = null, $return = false)
+    {
         $value = $return;
-        if (($var != null) && (isset($this->joData[$var])))
+        if (($var != null) && (isset($this->joData[$var]))) {
             $value = $this->joData[$var];
+        }
         return $value;
     }
 
     /**
      * Renderiza a view, vinda de /app/views/nome_da_pasta_origem/
      */
-    public function joViewIndex() {
+    public function joViewIndex()
+    {
         try {
             global $JOURL;
             if (file_exists(VIEWS . 'index.' . EXTENSION_VIEW)) {
                 if (is_array($this->joData)) {
                     extract($JOURL);
-                    if (count($this->joData) > 0)
+                    if (count($this->joData) > 0) {
                         extract($this->joData);
-                    require(VIEWS . 'index.' . EXTENSION_VIEW);
-                }else {
+                    }
+                    require_once(VIEWS . 'index.' . EXTENSION_VIEW);
+                } else {
                     throw new Exception('Para enviar dados pela a refer&ecirc;ncia joData, deve ser no formato de ARRAY.');
                 }
             } else {
@@ -63,17 +70,19 @@ class JOViews {
     /**
      * Renderiza a view, vinda de /app/views/
      */
-    public function joView($file = false) {
+    public function joView($file = false)
+    {
         try {
             global $JOURL;
             if ($file) {
                 if (file_exists(VIEWS . $file)) {
                     if (is_array($this->joData)) {
                         extract($JOURL);
-                        if (count($this->joData) > 0)
+                        if (count($this->joData) > 0) {
                             extract($this->joData);
-                        require(VIEWS . $file);
-                    }else {
+                        }
+                        require_once(VIEWS . $file);
+                    } else {
                         throw new Exception('Para enviar dados pela a refer&ecirc;ncia joData, deve ser no formato de ARRAY.');
                     }
                 } else {
@@ -90,17 +99,19 @@ class JOViews {
     /**
      * Renderiza a view, vinda de um caminho que você ira especificar Ex : /app/testes/nome_do_arquivo.[html|php]
      */
-    public function joViewPath($filepath = false) {
+    public function joViewPath($filepath = false)
+    {
         try {
             global $JOURL;
             if ($filepath) {
                 if (file_exists($filepath)) {
                     if (is_array($this->joData)) {
                         extract($JOURL);
-                        if (count($this->joData) > 0)
+                        if (count($this->joData) > 0) {
                             extract($this->joData);
-                        require($filepath);
-                    }else {
+                        }
+                        require_once($filepath);
+                    } else {
                         throw new Exception('Para enviar dados pela a refer&ecirc;ncia joData, deve ser no formato de ARRAY.');
                     }
                 } else {

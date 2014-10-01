@@ -11,23 +11,28 @@
  * @versao      1.2.0
  * @licenca     Gratuito para estudo, desenvolvimento e contribuicao
  */
-class JOValidate {
+class JOValidate
+{
 
     protected $values = array();
 
-    public function joSetFieldValue($value = null, $type = 'VOID', $msg = '') {
+    public function joSetFieldValue($value = null, $type = 'VOID', $msg = '')
+    {
         $this->values[] = array('value' => $value, 'type' => $type, 'msg' => $msg, 'length' => 0);
     }
 
-    public function joSetFieldLength($value = null, $type = 'MIN', $length = 1, $msg = '') {
+    public function joSetFieldLength($value = null, $type = 'MIN', $length = 1, $msg = '')
+    {
         $this->values[] = array('value' => $value, 'type' => $type, 'length' => $length, 'msg' => $msg);
     }
 
-    public function joSetFieldsCompare($value = null, $valueCompare = null, $msg = '') {
+    public function joSetFieldsCompare($value = null, $valueCompare = null, $msg = '')
+    {
         $this->values[] = array('value' => $value, 'valueCompare' => $valueCompare, 'type' => 'COMPARE', 'msg' => $msg);
     }
 
-    public function joValidateFields() {
+    public function joValidateFields()
+    {
 
         $regex['ALNUM'] = '/[[:alnum:]]/';
         $regex['ALPHA'] = '/[[:alpha:]]/';

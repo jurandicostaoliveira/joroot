@@ -11,7 +11,8 @@
  * @versao      1.2.0
  * @licenca     Gratuito para estudo, desenvolvimento e contribuicao
  */
-class JOPaginate {
+class JOPaginate
+{
 
     private $total = 0;
     private $limitPage = 0;
@@ -27,7 +28,8 @@ class JOPaginate {
      * O total geral de resultados Ex: 140
      * @param int $value
      */
-    public function joSetTotal($value = 0) {
+    public function joSetTotal($value = 0)
+    {
         $this->total = (int) $value;
     }
 
@@ -35,7 +37,8 @@ class JOPaginate {
      * A quantidade limite de resultados por pagina Ex: 20
      * @param int $value
      */
-    public function joSetLimitPage($value = 0) {
+    public function joSetLimitPage($value = 0)
+    {
         $this->limitPage = (int) $value;
     }
 
@@ -43,7 +46,8 @@ class JOPaginate {
      * A quantidade de links que aparecera disponivel
      * @param int $value
      */
-    public function joSetLimitLinks($value = 2) {
+    public function joSetLimitLinks($value = 2)
+    {
         $this->limitLinks = (int) $value;
     }
 
@@ -51,7 +55,8 @@ class JOPaginate {
      * O parametro que deve ser ultilizados para receber o numero da pagina pela URL Ex: 2, ele ira capturar o valor do $JOURL[PARAM2]
      * @param int $value
      */
-    public function joSetParamPosition($value = 1) {
+    public function joSetParamPosition($value = 1)
+    {
         $this->numParam = (int) $value;
     }
 
@@ -60,7 +65,8 @@ class JOPaginate {
      * @param string $open
      * @param string $close
      */
-    public function joWrapTag($open = null, $close = null) {
+    public function joWrapTag($open = null, $close = null)
+    {
         $this->wrapTag = array('open' => $open, 'close' => $close);
     }
 
@@ -71,26 +77,29 @@ class JOPaginate {
      * @param string $prev => Botao para pagina anterior
      * @param string $next => Botao para proxima pagina
      */
-    public function joSetButtons($first = null, $last = null, $prev = null, $next = null) {
+    public function joSetButtons($first = null, $last = null, $prev = null, $next = null)
+    {
         $this->btnFirst = $first;
         $this->btnLast = $last;
         $this->btnPrev = $prev;
         $this->btnNext = $next;
     }
 
-    private function joGetParameters() {
+    private function joGetParameters()
+    {
         global $JOURL;
         $parameters = null;
-        for ($i = 1; $i < $this->numParam; $i++)
+        for ($i = 1; $i < $this->numParam; $i++) {
             $parameters .= $JOURL['PARAM' . $i] . '/';
-
+        }
         return $parameters;
     }
 
     /**
      * Modelo 1 da paginacao de resultados
      */
-    private function joPaginateOne() {
+    private function joPaginateOne()
+    {
 
         global $JOURL;
 
@@ -104,20 +113,22 @@ class JOPaginate {
         //primeira pagina
         $string .= "{$this->wrapTag['open']}<a href=\"{$url}{$parameters}1\" id=\"joBtnFirst\">{$this->btnFirst}</a>{$this->wrapTag['close']}";
         for ($i = $convLastParam - $this->limitLinks; $i <= $convLastParam - 1; $i++) {
-            if ($i <= 0)
+            if ($i <= 0) {
                 continue;
-            else
+            } else {
                 $string .= "{$this->wrapTag['open']}<a href=\"{$url}{$parameters}{$i}\" class=\"joBtnNav\">{$i}</a>{$this->wrapTag['close']}";
+            }
         }
 
         //link ativo
         $string .= "{$this->wrapTag['open']}<a href=\"javascript:void(0)\" id=\"joBtnActive\">{$convLastParam}</a>{$this->wrapTag['close']}";
 
         for ($i = $convLastParam + 1; $i <= $convLastParam + $this->limitLinks; $i++) {
-            if ($i > $pages)
+            if ($i > $pages) {
                 continue;
-            else
+            } else {
                 $string .= "{$this->wrapTag['open']}<a href=\"{$url}{$parameters}{$i}\" class=\"joBtnNav\">{$i}</a>{$this->wrapTag['close']}";
+            }
         }
 
         //ultima pagina
@@ -128,7 +139,8 @@ class JOPaginate {
     /**
      * Modelo 2 da paginacao de resultados
      */
-    private function joPaginateTwo() {
+    private function joPaginateTwo()
+    {
         global $JOURL;
 
         $url = ROOT . $JOURL['CONTROLLER'] . '/' . $JOURL['ACTION'] . '/';
@@ -143,14 +155,16 @@ class JOPaginate {
         //pagina anterior
         $prevPg = $convLastParam - 1;
         $prevLink = null;
-        if ($convLastParam > 1)
+        if ($convLastParam > 1) {
             $prevLink = "{$this->wrapTag['open']}<a href=\"{$url}{$parameters}{$prevPg}\" id=\"joBtnPrev\">{$this->btnPrev}</a>{$this->wrapTag['close']}";
+        }
 
         //proxima pagina     
         $nextPg = $convLastParam + 1;
         $nextLink = null;
-        if ($pages > $convLastParam)
+        if ($pages > $convLastParam) {
             $nextLink = "{$this->wrapTag['open']}<a href=\"{$url}{$parameters}{$nextPg}\" id=\"joBtnNext\">{$this->btnNext}</a>{$this->wrapTag['close']}";
+        }
 
         //ultima pagina    
         $lastLink = "{$this->wrapTag['open']}<a href=\"{$url}{$parameters}{$pages}\" id=\"joBtnLast\">{$this->btnLast}</a>{$this->wrapTag['close']}";
@@ -162,7 +176,8 @@ class JOPaginate {
     /**
      * Retorna os links da paginacao de resultados
      */
-    public function joGetPaginate($type = 1) {
+    public function joGetPaginate($type = 1)
+    {
         $type = (int) $type;
         switch ($type) {
             case 2:
@@ -177,7 +192,8 @@ class JOPaginate {
     /**
      * Exibe os links da paginacao de resultados
      */
-    public function joShowPaginate($type = 1) {
+    public function joShowPaginate($type = 1)
+    {
         $type = (int) $type;
         switch ($type) {
             case 2:

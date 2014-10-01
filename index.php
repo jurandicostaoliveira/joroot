@@ -32,8 +32,8 @@ $run->joDb = array(
         'SGBD' => 'mysql',
         'HOSTNAME' => 'localhost',
         'USERNAME' => 'root',
-        'PASSWORD' => '',
-        'DATABASE' => 'noticias'
+        'PASSWORD' => '123456',
+        'DATABASE' => 'joroot'
     )
 );
 

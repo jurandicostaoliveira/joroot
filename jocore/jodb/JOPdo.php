@@ -11,11 +11,13 @@
  * @versao      1.2.0
  * @licenca     Gratuito para estudo, desenvolvimento e contribuicao
  */
-class JOPdo {
+class JOPdo
+{
 
     private $conn, $sgbd, $port, $hostname, $username, $password, $database, $persistent;
 
-    public function __construct($index, $JODB) {
+    public function __construct($index, $JODB)
+    {
         $this->sgbd = $JODB[$index]['SGBD'];
         $this->port = $JODB[$index]['PORT'];
         $this->hostname = $JODB[$index]['HOSTNAME'];
@@ -30,17 +32,20 @@ class JOPdo {
      * @param String $error
      * @return HTML 
      */
-    protected static function joError($error) {
-        if (!SHOW_MSG_ERROR)
+    protected static function joError($error)
+    {
+        if (!SHOW_MSG_ERROR) {
             $error = 'N&atilde;o entre em p&acirc;nico, pode ser apenas um erro de rota, verifique a URL digitada!';
-        die(include($GLOBALS['JOCOREPATH'] . 'JOError.php'));
+        }
+        die(require_once($GLOBALS['JOCOREPATH'] . 'JOError.php'));
     }
 
     /**
      * Efetua a conexao com o banco de dados via PDO
      * @return connect
      */
-    public function joOpen() {
+    public function joOpen()
+    {
         try {
             $dsn = "{$this->sgbd}:host={$this->hostname};port={$this->port};dbname={$this->database}";
             $options = array(PDO::ATTR_PERSISTENT => $this->persistent);
@@ -50,9 +55,10 @@ class JOPdo {
             self::joError($e->getMessage());
         }
     }
-    
-    public function joClose() {
-        return $this->conn = null;
+
+    public function joClose()
+    {
+        return $this->conn = NULL;
     }
 
 }

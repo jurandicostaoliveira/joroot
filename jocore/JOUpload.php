@@ -11,7 +11,8 @@
  * @versao      1.2.0
  * @licenca     Gratuito para estudo, desenvolvimento e contribuicao
  */
-class JOUpload {
+class JOUpload
+{
 
     private $joDir = 'lib/images/';
 
@@ -20,10 +21,12 @@ class JOUpload {
      * @param String $error
      * @return Page - Pagina imprimindo a mensagem de erro  
      */
-    protected static function joError($error = null) {
-        if (!SHOW_MSG_ERROR)
+    protected static function joError($error = null)
+    {
+        if (!SHOW_MSG_ERROR) {
             $error = 'N&atilde;o entre em p&acirc;nico, pode ser apenas um erro de rota, verifique a URL digitada!';
-        die(include($GLOBALS['JOCOREPATH'] . 'JOError.php'));
+        }
+        die(require_once($GLOBALS['JOCOREPATH'] . 'JOError.php'));
     }
 
     /**
@@ -32,7 +35,8 @@ class JOUpload {
      * @return String 
      * @throws Exception
      */
-    public function joRandomName($file = null) {
+    public function joRandomName($file = null)
+    {
         try {
             if (is_array($file)) {
                 return md5(uniqid(rand(), true)) . '.' . self::joFileType($file);
@@ -50,7 +54,8 @@ class JOUpload {
      * @return string
      * @throws Exception
      */
-    public function joFileType($file = null) {
+    public function joFileType($file = null)
+    {
         try {
             if (is_array($file)) {
                 $extension_exp = explode('.', $file['name']);
@@ -70,13 +75,16 @@ class JOUpload {
      * Por padrao 'lib/images/'
      * @param String $dir 
      */
-    public function joSetDir($dir = null) {
+    public function joSetDir($dir = null)
+    {
 
-        if ($dir != null)
+        if ($dir != null) {
             $this->joDir = $dir;
+        }
 
-        if (substr($this->joDir, -1) <> '/')
+        if (substr($this->joDir, -1) <> '/') {
             $this->joDir = $this->joDir . '/';
+        }
 
         if (!file_exists($this->joDir)) {
             mkdir($this->joDir);
@@ -91,7 +99,8 @@ class JOUpload {
      * @param Int $width = A largura da nova imagem desejada. 
      * @param String $filename = O nome da nova imagem(personalizar se quiser)
      */
-    public function joResizeImage($file = null, $width = 100, $filename = false) {
+    public function joResizeImage($file = null, $width = 100, $filename = false)
+    {
         try {
             if (is_array($file)) {
                 $name = ($filename) ? $filename : $file['name'];
@@ -141,15 +150,17 @@ class JOUpload {
      * @param Array $file
      * @param String $filename 
      */
-    public function joMoveUpload($file = null, $filename = false) {
+    public function joMoveUpload($file = null, $filename = false)
+    {
         try {
             if (is_array($file)) {
                 $name = ($filename) ? $filename : $file['name'];
                 if ($file['error'] == 0) {
-                    if (move_uploaded_file($file['tmp_name'], $this->joDir . $name))
+                    if (move_uploaded_file($file['tmp_name'], $this->joDir . $name)) {
                         chmod($this->joDir . $name, 0777);
-                    else
+                    } else {
                         throw new Exception('Erro ao tentar enviar o arquivo');
+                    }
                 } else {
                     throw new Exception('Falha na tentativa de upload');
                 }
@@ -165,11 +176,13 @@ class JOUpload {
      * Para remover arquivos em diretorios que tenha permissao 777
      * @param String $filename
      */
-    public function joRemoveFile($filename = null) {
-        if (($filename != null) && (file_exists($filename)))
+    public function joRemoveFile($filename = null)
+    {
+        if (($filename != null) && (file_exists($filename))) {
             unlink($filename);
-        else
+        } else {
             self::joError("O arquivo {$filename} n&atilde;o foi encontrado");
+        }
     }
 
 }
