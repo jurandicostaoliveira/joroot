@@ -37,4 +37,22 @@ $run->joDb = array(
     )
 );
 
+/**
+ * Configuracoes do firewall de protecao em paginas
+ * - Caso nao queira protecao dos firewalls no sistema retire as configuracoes abaixo
+ */
+$run->joFirewall = array(
+    'URL_FAILURE' => 'login',
+    'INDEX_AUTH' => 'ADMIN_AUTH',
+    'INDEX_ROLE' => 'ADMIN_ACCESS',
+    'REQUIRED_CREDENTIALS' => array('ADMIN_EMAIL', 'ADMIN_PASSWORD'),
+    'REQUIRED_ACCESS' => array(
+        'noticias:listar' => array(1, 2, 3),
+        'noticias:editar' => array(1, 2),
+        'noticias:excluir' => array(1, 3, 5),
+        'noticias:editar-imagem' => array(1, 3, 4),
+        'noticias:upload-imagem' => array(1)
+    )
+);
+
 $run->joInit();

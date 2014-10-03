@@ -32,6 +32,12 @@
                         <li>
                             <a href="noticias/listar">Noticias</a>
                         </li>
+                        <li>
+                            <a href="login">Login</a>
+                        </li>
+                        <li>
+                            <a href="login/logout">Sair</a>
+                        </li>
                     </ul>
                 </div>
                 <?php include('templates/' . $conteudo); ?>

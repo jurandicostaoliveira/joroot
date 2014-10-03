@@ -51,6 +51,19 @@ class JOBootstrap
     );
 
     /**
+     * Configuracoes de firewalls
+     * @var type 
+     */
+    public $joFirewall = array();
+    private $joFirewallDefault = array(
+        'URL_FAILURE' => NULL,
+        'INDEX_AUTH' => 'JOROOT_AUTH',
+        'INDEX_ROLE' => false,
+        'REQUIRED_CREDENTIALS' => false,
+        'REQUIRED_ACCESS' => array()
+    );
+
+    /**
      * Retorna o erro caso houver um.
      * @param String $error
      * @return Page - Pagina que imprime a mensagem de erro  
@@ -130,16 +143,20 @@ class JOBootstrap
 
             $JODB = $this->joConfigDb();
             require_once('JOModel.php');
-
             require_once('JOController.php');
+
             $controller = ucfirst($JOURL['CONTROLLER']);
-            require_once(CONTROLLERS . $controller . 'Controller.php');
+            $controller .= 'Controller';
+            require_once(CONTROLLERS . $controller . '.php');
 
             /**
              * Configura o controller requisitado e checa a action
              */
-            $controller .= 'Controller';
-            $action = $start->joAuthAction($controller, $JOURL['ACTION']);
+            $action = $start->joAuthAction($controller, $start->joCamelCaseAction($JOURL['ACTION']));
+
+            if (count($this->joFirewall) > 0) {
+                $this->getFirewall();
+            }
 
             /**
              * Instacia o objeto e executa o metodo(action)
@@ -153,6 +170,19 @@ class JOBootstrap
         } catch (Exception $e) {
             self::joError($e->getMessage());
         }
+    }
+
+    /**
+     * Prepara os firewalls e os inicia
+     * @global array $JOURL
+     */
+    private function getFirewall()
+    {
+        global $JOURL;
+        require_once('JOFirewall.php');
+        $configFirewall = array_merge($this->joFirewallDefault, $this->joFirewall);
+        $firewall = new JOFirewall($configFirewall, "{$JOURL['CONTROLLER']}:{$JOURL['ACTION']}");
+        $firewall->start();
     }
 
 }

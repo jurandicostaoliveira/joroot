@@ -111,7 +111,7 @@ class NoticiasController extends JOController
     /**
      * Apresenta a tela para fazer upload da imagem
      */
-    public function editar_imagem()
+    public function editarImagem()
     {
         $this->view->joData['id'] = $this->request->joParam(1);
         $this->view->joData['conteudo'] = 'NoticiasImagem.php';
@@ -122,7 +122,7 @@ class NoticiasController extends JOController
      * Faz verificacoes, redimensionamento e upload da imagem
      * @throws Exception
      */
-    public function upload_imagem()
+    public function uploadImagem()
     {
         try {
             $this->request->joRequestMethod('POST', ROOT . 'noticias/listar');

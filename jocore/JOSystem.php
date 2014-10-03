@@ -83,7 +83,19 @@ class JOSystem
      */
     protected function joGetAction()
     {
-        return isset($this->url[1]) ? str_replace('-', '_', $this->url[1]) : 'index';
+        return isset($this->url[1]) ? $this->url[1] : 'index';
+    }
+
+    /**
+     * Retorna a action no formato camelCase
+     * @param string $action
+     */
+    public function joCamelCaseAction($action = 'index')
+    {
+        $actionCamelCase = preg_replace_callback('/[-_](.)/', function ($matches) {
+            return strtoupper($matches[1]);
+        }, $action);
+        return $actionCamelCase;
     }
 
     /**
@@ -91,8 +103,8 @@ class JOSystem
      */
     public function joGetUrl()
     {
-        $this->setUrl['CONTROLLER'] = self::joGetController();
-        $this->setUrl['ACTION'] = self::joGetAction();
+        $this->setUrl['CONTROLLER'] = $this->joGetController();
+        $this->setUrl['ACTION'] = $this->joGetAction();
         $maxParam = intval(MAX_PARAM) + 1;
         //Montagem dos parametros
         for ($i = 1; $i < $maxParam; ++$i) {
