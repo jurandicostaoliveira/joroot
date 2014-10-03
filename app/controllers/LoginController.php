@@ -23,10 +23,11 @@ class LoginController extends JOController
     public function check()
     {
         $this->session->index('ADMIN_AUTH')->set(array(
-            'ADMIN_EMAIL' => 'admin@joroot.com.br',
-            'ADMIN_PASSWORD' => '123456',
+            'ADMIN_EMAIL' => $this->request->joPost('email'),
+            'ADMIN_PASSWORD' => $this->request->joPost('senha'),
             'ADMIN_ACCESS' => 1 //Nivel de acesso do usuario
         ));
+
         $this->request->joRedirect(ROOT . 'noticias/listar');
     }
 
