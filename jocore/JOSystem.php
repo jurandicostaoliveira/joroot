@@ -83,7 +83,7 @@ class JOSystem
      */
     protected function joGetAction()
     {
-        return isset($this->url[1]) ? $this->url[1] : 'index';
+        return isset($this->url[1]) && (!empty($this->url[1])) ? $this->url[1] : 'index';
     }
 
     /**
