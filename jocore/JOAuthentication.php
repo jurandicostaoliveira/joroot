@@ -3,7 +3,7 @@
 /**
  * Joroot Framework(PHP)
  * 
- * JOFirewall para bloquear acessos em paginas especificadas
+ * JOAuthentication possibilita criar autenticacao de usuarios no sistema atraves de e-mail e senha
  *  
  * @autor       Jurandi Costa Oliveira (jurandi@jurandioliveira.com.br)
  * @link        http://www.jurandioliveira.com.br/joroot 
@@ -20,6 +20,7 @@ class JOAuthentication extends JOModel
             $arrayWhere = array();
 
     /**
+     * Verifica se o e-mail informado e valido
      * 
      * @param string $email
      * @return boolean
@@ -30,6 +31,7 @@ class JOAuthentication extends JOModel
     }
 
     /**
+     * Verifica se a senha foi informada
      * 
      * @param string $password
      * @return boolean
@@ -40,6 +42,7 @@ class JOAuthentication extends JOModel
     }
 
     /**
+     * Compara e forca o tamanho da senha
      * 
      * @param stirng $password
      * @param int $minLength
@@ -52,6 +55,7 @@ class JOAuthentication extends JOModel
     }
 
     /**
+     * Confirma a senha
      * 
      * @param string $password
      * @param string $confirm
@@ -63,6 +67,7 @@ class JOAuthentication extends JOModel
     }
 
     /**
+     * Conecta com o banco pre configurado, informando a chave do conector
      * 
      * @param string $strConnect
      * @return \JOAuthentication
@@ -74,6 +79,7 @@ class JOAuthentication extends JOModel
     }
 
     /**
+     * Nome da tabela que sera consultada
      * 
      * @param string $tableName
      * @return \JOAuthentication    
@@ -85,6 +91,7 @@ class JOAuthentication extends JOModel
     }
 
     /**
+     * Possiveis condicoes
      * 
      * @param string $name
      * @param string $value
@@ -98,6 +105,7 @@ class JOAuthentication extends JOModel
     }
 
     /**
+     * Possiveis condicoes
      * 
      * @param string $name
      * @param string $value
@@ -111,6 +119,7 @@ class JOAuthentication extends JOModel
     }
 
     /**
+     * Verifica se o usuario informado esta resgistrado
      * 
      * @return boolean
      */
@@ -126,6 +135,7 @@ class JOAuthentication extends JOModel
     }
 
     /**
+     * Obtem os dados do usuario registrado
      * 
      * @return array
      */
