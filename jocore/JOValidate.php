@@ -3,13 +3,13 @@
 /**
  * Joroot Framework(PHP)
  * 
- * JOValidate maximiza validacoes de valores
+ * Responsavel para validar tipos e valores
  *  
- * @autor       Jurandi Costa Oliveira (jurandi@jurandioliveira.com.br)
- * @link        http://www.jurandioliveira.com.br/joroot 
- * @desde       2011
- * @versao      1.2.0
- * @licenca     Gratuito para estudo, desenvolvimento e contribuicao
+ * @author      Jurandi C. Oliveira (jurandi@jurandioliveira.com.br)
+ * @link        https://github.com/jurandicostaoliveira/joroot 
+ * @since       2011
+ * @version     1.5.0
+ * @license     Gratuito para estudo, desenvolvimento e contribuicao
  */
 class JOValidate
 {

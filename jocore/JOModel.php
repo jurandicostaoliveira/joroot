@@ -3,13 +3,13 @@
 /**
  * Joroot Framework(PHP)
  * 
- * JOModel faz abstracao de banco de dados 
- *  
- * @autor       Jurandi Costa Oliveira (jurandi@jurandioliveira.com.br)
- * @link        http://www.jurandioliveira.com.br/joroot 
- * @desde       2011
- * @versao      1.2.0
- * @licenca     Gratuito para estudo, desenvolvimento e contribuicao
+ * Responsavel para fazer abstracao de banco de dados 
+ *   
+ * @author      Jurandi C. Oliveira (jurandi@jurandioliveira.com.br)
+ * @link        https://github.com/jurandicostaoliveira/joroot 
+ * @since       2011
+ * @version     1.5.0
+ * @license     Gratuito para estudo, desenvolvimento e contribuicao
  */
 abstract class JOModel
 {

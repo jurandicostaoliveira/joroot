@@ -53,7 +53,7 @@ class JOView
                 throw new Exception('O arquivo ' . $pathFile . ' n&atilde;o foi encontrado.');
             }
         } catch (Exception $e) {
-            JOBootstrap::joError($e->getMessage());
+            JOBootstrap::error($e->getMessage());
         }
     }
 

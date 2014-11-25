@@ -3,13 +3,13 @@
 /**
  * Joroot Framework(PHP)
  * 
- * JOSession gerencimento, validacao de usuario e nivel de acesso pela a sessao 
- *  
- * @autor       Jurandi Costa Oliveira (jurandi@jurandioliveira.com.br)
- * @link        http://www.jurandioliveira.com.br/joroot 
- * @desde       2011
- * @versao      1.2.0
- * @licenca     Gratuito para estudo, desenvolvimento e contribuicao
+ * Responsavel pelo armazenamento, gerencimento e validacao de usuario, nivel de acesso pela a sessao 
+ *   
+ * @author      Jurandi C. Oliveira (jurandi@jurandioliveira.com.br)
+ * @link        https://github.com/jurandicostaoliveira/joroot 
+ * @since       2011
+ * @version     1.5.0
+ * @license     Gratuito para estudo, desenvolvimento e contribuicao
  */
 class JOSession
 {

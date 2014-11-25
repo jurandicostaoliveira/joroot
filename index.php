@@ -3,11 +3,11 @@
 /**
  * Joroot Framework(PHP)
  *  
- * @autor       Jurandi Costa Oliveira (jurandi@jurandioliveira.com.br)
- * @link        http://www.jurandioliveira.com.br/joroot 
- * @desde       2011
- * @versao      1.2.0
- * @licenca     Gratuito para estudo, desenvolvimento e contribuicao
+ * @author      Jurandi C. Oliveira (jurandi@jurandioliveira.com.br)
+ * @link        https://github.com/jurandicostaoliveira/joroot 
+ * @since       2011
+ * @version     1.5.0
+ * @license     Gratuito para estudo, desenvolvimento e contribuicao
  */
 require 'jocore/JOBootstrap.php';
 
@@ -15,7 +15,7 @@ $run = new JOBootstrap();
 
 //Configuracoes gerais
 $run->joConfig = array(
-    'ROOT' => 'http://local/joroot/', //url do seu projeto 
+    'ROOT' => $run->getDomain() . '/joroot/', //url do seu projeto 
     'CHARSET' => 'UTF-8', //Charset ultilizado no projeto
     'ROUTE_DEFAULT' => 'home', //Controller que sera carregado inicialmente 
     'MAX_PARAM' => 5, //Quantidade maxima de parametros que devera ser passados pela url exemplo .: dominio/controller/action/param1/param2 etc.
@@ -26,7 +26,7 @@ $run->joConfig = array(
 
 //Configuracoes de banco de dados
 $run->joDb = array(
-    'BANCO_1' => array(
+    'DB1' => array(
         'DRIVER' => 'pdo',
         'SGBD' => 'mysql',
         'HOSTNAME' => 'localhost',

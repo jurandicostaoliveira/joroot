@@ -7,20 +7,17 @@ class HomeController extends JOController
 
     public function __construct()
     {
-        $this->view = parent::joView();
+        parent::get(array(
+            'JOView'
+        ));
+        
+        $this->view = new JOView();
     }
 
     public function index()
     {
-        $this->view->render('index.php', array(
-            'conteudo' => 'Home.php'
-        ));
-    }
-
-    public function test()
-    {
         $this->view->render('index.phtml', array(
-            'teste' => 'JOROOT'
+            'template' => 'home.phtml'
         ));
     }
 

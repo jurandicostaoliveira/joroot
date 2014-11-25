@@ -3,21 +3,26 @@
 class LoginController extends JOController
 {
 
-    protected $session, $request, $view;
+    private $session, $request, $view;
 
     public function __construct()
     {
-        $this->session = parent::joSession();
-        $this->request = parent::joRequest();
-        $this->view = parent::joView();
+        parent::get(array(
+            'JOSession',
+            'JORequest',
+            'JOView'
+        ));
+        
+        $this->session = new JOSession();
+        $this->request = new JORequest();
+        $this->view = new JOView();
     }
 
     public function index()
     {
-        $this->view->joData = array(
-            'conteudo' => 'LoginForm.php'
-        );
-        $this->view->joViewIndex();
+        $this->view->render('index.phtml', array(
+            'template' => 'login-form.phtml'
+        ));
     }
 
     public function check()
@@ -28,14 +33,7 @@ class LoginController extends JOController
             'ADMIN_ACCESS' => 1 //Nivel de acesso do usuario
         ));
 
-        $this->request->joRedirect(ROOT . 'noticias/listar');
-    }
-
-    public function logout()
-    {
-        //$this->session->destroy();
-        $this->session->index('ADMIN_AUTH')->remove();
-        $this->request->joRedirect(ROOT);
+        $this->request->redirect(ROOT . 'news/list-all');
     }
 
 }

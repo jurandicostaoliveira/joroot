@@ -1,0 +1,24 @@
+<p style="float: left; width: 100%; padding: 10px 0px;">
+    <a href="news/add">+ Nova not&iacute;cia</a>
+</p>    
+<table border="1" width="100%">
+    <tr>
+        <td><strong>Titulo</strong></td>
+        <td><strong>Not&iacute;cia</strong></td>
+        <td><strong>Imagem</strong></td>
+        <td><strong>Editar</strong></td>
+        <td><strong>Excluir</strong></td>
+    </tr>
+    <?php foreach ($data as $d): ?>
+        <tr>
+            <td><?php echo $d['title']; ?></td>
+            <td><?php echo $d['description']; ?></td>
+            <td>
+                <img src="lib/images/<?php echo $d['image']; ?>" alt="imagem" /><br />
+                <a href="news/edit-image/<?php echo $d['id']; ?>">Alterar</a>
+            </td>
+            <td><a href="news/edit/<?php echo $d['id']; ?>">Editar</a></td>
+            <td><a href="javascript:confirmRemoveNews('<?php echo $d['id']; ?>');">Excluir</a></td>
+        </tr>
+    <?php endforeach; ?>
+</table>

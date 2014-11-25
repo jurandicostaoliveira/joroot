@@ -3,13 +3,13 @@
 /**
  * Joroot Framework(PHP)
  * 
- * JOFirewall para bloquear acessos em paginas especificadas
+ * Responsavel para bloquear acessos em paginas especificadas
  *  
- * @autor       Jurandi Costa Oliveira (jurandi@jurandioliveira.com.br)
- * @link        http://www.jurandioliveira.com.br/joroot 
- * @desde       2011
- * @versao      1.2.0
- * @licenca     Gratuito para estudo, desenvolvimento e contribuicao
+ * @author      Jurandi C. Oliveira (jurandi@jurandioliveira.com.br)
+ * @link        https://github.com/jurandicostaoliveira/joroot 
+ * @since       2011
+ * @version     1.5.0
+ * @license     Gratuito para estudo, desenvolvimento e contribuicao
  */
 class JOFirewall extends JOController
 {
@@ -25,8 +25,9 @@ class JOFirewall extends JOController
 
     public function __construct($firewall, $urlCurrent = NULL)
     {
-        $this->session = parent::joSession();
-        $this->request = parent::joRequest();
+        parent::get(array('JOSession', 'JORequest'));
+        $this->session = new JOSession();
+        $this->request = new JORequest();
         //
         $this->urlCurrent = $urlCurrent;
         $this->urlFailure = $firewall['URL_FAILURE'];

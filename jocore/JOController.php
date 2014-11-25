@@ -3,209 +3,92 @@
 /**
  * Joroot Framework(PHP)
  * 
- * JOController responsavel pela usuabilidade do JF nos controllers
+ * Responsavel pelo o compatilhamento de classes
  *  
- * @autor       Jurandi Costa Oliveira (jurandi@jurandioliveira.com.br)
- * @link        http://www.jurandioliveira.com.br/joroot 
- * @desde       2011
- * @versao      1.2.0
- * @licenca     Gratuito para estudo, desenvolvimento e contribuicao
+ * @author      Jurandi C. Oliveira (jurandi@jurandioliveira.com.br)
+ * @link        https://github.com/jurandicostaoliveira/joroot 
+ * @since       2011
+ * @version     1.5.0
+ * @license     Gratuito para estudo, desenvolvimento e contribuicao
  */
 abstract class JOController
 {
 
     /**
-     * Retorna o erro caso houver um.
-     * @param String $error
-     * @return Page - Pagina imprimindo a mensagem de erro  
-     */
-    protected static function joError($error = null)
-    {
-        if (!SHOW_MSG_ERROR) {
-            $error = 'N&atilde;o entre em p&acirc;nico, pode ser apenas um erro de rota, verifique a URL digitada!';
-        }
-        die(require_once($GLOBALS['JOCOREPATH'] . 'JOError.php'));
-    }
-
-    /**
-     * Inclui um novo controller
-     * @param String $controller - Nome do controller a ser incluso Ex.: "teste"
-     * @return Objetc class - O objeto retornado
-     * @throws Exception - caso houver imprime o erro na tela  
-     */
-    public static function joGetController($controller = false)
-    {
-        try {
-            if ($controller) {
-                $class = ucfirst($controller) . 'Controller';
-                if (file_exists(CONTROLLERS . $class . '.php')) {
-                    require_once(CONTROLLERS . $class . '.php');
-                    if (class_exists($class)) {
-                        return new $class();
-                    } else {
-                        throw new Exception('A classe ' . $class . ' n&atilde;o foi definida no arquivo ' . $controller . 'Controller.php');
-                    }
-                } else {
-                    throw new Exception('N&atilde;o existe o arquivo ' . $controller . 'Controller.php em ' . CONTROLLERS);
-                }
-            } else {
-                throw new Exception('Informe o nome do controller');
-            }
-        } catch (Exception $e) {
-            self::joError($e->getMessage());
-        }
-    }
-
-    /**
-     * Inclui um novo model
-     * @param String $model
-     * @return Object - O objeto retornado 
-     * @throws Exception - caso houver imprime o erro na tela  
-     */
-    public static function joGetModel($model = false)
-    {
-        try {
-            if ($model) {
-                $class = ucfirst($model) . 'Model';
-                if (file_exists(MODELS . $class . '.php')) {
-                    require_once(MODELS . $class . '.php');
-                    if (class_exists($class)) {
-                        return new $class();
-                    } else {
-                        throw new Exception('A classe ' . $class . ' n&atilde;o foi definida no arquivo ' . $model . 'Model.php');
-                    }
-                } else {
-                    throw new Exception('N&atilde;o existe o arquivo ' . $model . 'Model.php em ' . MODELS);
-                }
-            } else {
-                throw new Exception('Informe o nome do model');
-            }
-        } catch (Exception $e) {
-            self::joError($e->getMessage());
-        }
-    }
-
-    /**
-     * Retorna o objeto \JOView
+     * Rotina que verifica se ha o prefixo especifico seguido de @ para encontrar o caminho.
      * 
-     * @return Object  
+     * @param string $filename
+     * @return string
      */
-    public static function joView()
+    private static function getPath($filename)
     {
-        require_once( __DIR__ . DIRECTORY_SEPARATOR . 'JOView.php');
-        return new JOView();
+        $response = (object) array(
+                    'className' => $filename,
+                    'fileName' => __DIR__ . DIRECTORY_SEPARATOR . "{$filename}.php"
+        );
+
+        if (preg_match('/^APP@/', $filename)) {
+            $response->className = str_replace('APP@', '', $filename);
+            $response->fileName = "app/{$response->className}.php";
+        } else if (preg_match('/^CONTROLLER@/', $filename)) {
+            $response->className = str_replace('CONTROLLER@', '', $filename);
+            $response->fileName = CONTROLLERS . "{$response->className}.php";
+        } else if (preg_match('/^MODEL@/', $filename)) {
+            $response->className = str_replace('MODEL@', '', $filename);
+            $response->fileName = MODELS . "{$response->className}.php";
+        }
+
+        return $response;
     }
 
     /**
-     * Retorna o objeto \JOSession
-     * @return Object 
+     * Rotina para testar a existencia da classe informada, que devera possui o mesmo nome do arquivo.
+     * 
+     * @param string $className
+     * @param string $pathFile
      */
-    public static function joSession()
+    private static function checkClass($className, $fileName)
     {
-        require_once('JOSession.php');
-        return new JOSession();
-    }
-
-    /**
-     * Retorna o objeto \JOValidate
-     * @return Object 
-     */
-    public static function joValidate()
-    {
-        require_once('JOValidate.php');
-        return new JOValidate();
-    }
-
-    /**
-     * Retorna o objeto \JOPaginate
-     * @return Object 
-     */
-    public static function joPaginate()
-    {
-        require_once('JOPaginate.php');
-        return new JOPaginate();
-    }
-
-    /**
-     * Retorna o objeto \JOResize
-     * @return Object 
-     */
-    public static function joUpload()
-    {
-        require_once('JOUpload.php');
-        return new JOUpload();
-    }
-
-    /**
-     * Retorna o objeto \JOResize
-     * @return Object 
-     */
-    public static function joLog()
-    {
-        require_once('JOLog.php');
-        return new JOLog();
-    }
-
-    /**
-     * Retorna o objeto \JOMail
-     * @return Object 
-     */
-    public static function joMail()
-    {
-        require_once('JOMail.php');
-        return new JOMail();
-    }
-
-    /**
-     * Inclui uma API externa
-     * @param String $path - caminho completo para encontrar a api
-     * @throws Exception - caso houver imprime o erro na tela  
-     */
-    public static function joApiExternal($path = false)
-    {
-        try {
-            if ($path) {
-                if (file_exists($path)) {
-                    require_once($path);
-                } else {
-                    throw new Exception('A API n&atilde;o foi encontrada nesse caminho.: ' . $path);
-                }
-            } else {
-                throw new Exception('Informe o caminho completo da API Ex.: app/diretorio/nome_da_api.php');
-            }
-        } catch (Exception $e) {
-            self::joError($e->getMessage());
+        if (!class_exists($className)) {
+            JOBootstrap::error("A classe n&atilde;o foi encontrada no arquivo {$fileName}.");
         }
     }
 
     /**
-     * Retorna o objeto \JOHtml
-     * @return Object 
+     * Rotina para incluir classes predefinidas ou nao
+     * 
+     * JOView
+     * JOSession
+     * JOValidate
+     * JOPaginate
+     * JOUpload
+     * JOLog
+     * JOMail
+     * JOHtml
+     * JODownload
+     * JORequest
+     * 
+     * OU
+     * 
+     * APP@caminho/do/arquivo a partir do diretorio app/
+     * CONTROLLER@caminho/do/arquivo a partir do diretorio app/controllers/
+     * MODEL@caminho/do/arquivo a partir do diretorio app/models/
+     * 
+     * @param array $options
      */
-    public static function joHtml()
+    public static function get($options)
     {
-        require_once('JOHtml.php');
-        return new JOHtml();
-    }
-
-    /**
-     * Retorna o objeto \JODownload
-     * @return Object 
-     */
-    public static function joDownload()
-    {
-        require_once('JODownload.php');
-        return new JODownload();
-    }
-
-    /**
-     * Retorna o objeto \JORequest
-     * @return Object 
-     */
-    public static function joRequest()
-    {
-        require_once('JORequest.php');
-        return new JORequest();
+        if (is_array($options)) {
+            foreach ($options as $key => $value) {
+                $path = self::getPath($value);
+                if (file_exists($path->fileName)) {
+                    require_once $path->fileName;
+                    self::checkClass($path->className, $path->fileName);
+                } else {
+                    JOBootstrap::error("O arquivo {$path->fileName} n&atilde;o foi encontrado.");
+                }
+            }
+        }
     }
 
 }

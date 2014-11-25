@@ -3,13 +3,13 @@
 /**
  * Joroot Framework(PHP)
  * 
- * JOBootstrap todas as funcionalidades passam por aqui 
+ * Responsavel para iniciar e trabalhar as funcionalidades
  *  
- * @autor       Jurandi Costa Oliveira (jurandi@jurandioliveira.com.br)
- * @link        http://www.jurandioliveira.com.br/joroot 
- * @desde       2011
- * @versao      1.2.0
- * @licenca     Gratuito para estudo, desenvolvimento e contribuicao
+ * @author      Jurandi C. Oliveira (jurandi@jurandioliveira.com.br)
+ * @link        https://github.com/jurandicostaoliveira/joroot 
+ * @since       2011
+ * @version     1.5.0
+ * @license     Gratuito para estudo, desenvolvimento e contribuicao
  */
 $JOURL = array();
 $JODB = array();
@@ -67,12 +67,23 @@ class JOBootstrap
      * @param String $error
      * @return Page - Pagina que imprime a mensagem de erro  
      */
-    public static function joError($error = null)
+    public static function error($error = null)
     {
         if (!SHOW_MSG_ERROR) {
             $error = 'N&atilde;o entre em p&acirc;nico, pode ser apenas um erro de rota, verifique a URL digitada!';
         }
-        die(require_once($GLOBALS['JOCOREPATH'] . 'JOError.php'));
+        die(require_once(__DIR__ . DIRECTORY_SEPARATOR . 'JOError.php'));
+    }
+
+    /**
+     * Rotina que identifica o protocolo e dominio atual
+     * 
+     * @return string
+     */
+    public function getDomain()
+    {
+        $protocol = (strpos(strtolower(filter_input(INPUT_SERVER, 'SERVER_PROTOCOL')), 'https') === false) ? 'http://' : 'https://';
+        return $protocol . filter_input(INPUT_SERVER, 'HTTP_HOST');
     }
 
     /**

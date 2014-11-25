@@ -3,15 +3,15 @@
 /**
  * Joroot Framework(PHP)
  * 
- * JOSystem projeta a entrada de dados pela URL
+ * Responsavel em projetar a entrada de dados pela URL
  * Faz fluir o mecanismo do projeto, de acordo com o que vem da URL
- * Ex da URL : http://www.seudominio.com.br/controle/acao/parametros  
- *  
- * @autor       Jurandi Costa Oliveira (jurandi@jurandioliveira.com.br)
- * @link        http://www.jurandioliveira.com.br/joroot 
- * @desde       2011
- * @versao      1.2.0
- * @licenca     Gratuito para estudo, desenvolvimento e contribuicao
+ * Ex da URL : http://www.seudominio.com.br/controle/acao/parametro1/parametro2 ...  
+ *   
+ * @author      Jurandi C. Oliveira (jurandi@jurandioliveira.com.br)
+ * @link        https://github.com/jurandicostaoliveira/joroot 
+ * @since       2011
+ * @version     1.5.0
+ * @license     Gratuito para estudo, desenvolvimento e contribuicao
  */
 class JOSystem
 {

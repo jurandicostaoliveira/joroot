@@ -3,13 +3,13 @@
 /**
  * Joroot Framework(PHP)
  * 
- * JOAuthentication possibilita criar autenticacao de usuarios no sistema atraves de e-mail e senha
- *  
- * @autor       Jurandi Costa Oliveira (jurandi@jurandioliveira.com.br)
- * @link        http://www.jurandioliveira.com.br/joroot 
- * @desde       2011
- * @versao      1.2.0
- * @licenca     Gratuito para estudo, desenvolvimento e contribuicao
+ * Responsavel para criar autenticacao de usuarios no sistema atraves de e-mail e senha
+ *   
+ * @author      Jurandi C. Oliveira (jurandi@jurandioliveira.com.br)
+ * @link        https://github.com/jurandicostaoliveira/joroot 
+ * @since       2011
+ * @version     1.5.0
+ * @license     Gratuito para estudo, desenvolvimento e contribuicao
  */
 class JOAuthentication extends JOModel
 {
