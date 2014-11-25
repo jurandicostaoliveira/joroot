@@ -86,13 +86,14 @@ abstract class JOController
     }
 
     /**
-     * Retorna o objeto \JOViews
+     * Retorna o objeto \JOView
+     * 
      * @return Object  
      */
     public static function joView()
     {
-        require_once('JOViews.php');
-        return new JOViews();
+        require_once( __DIR__ . DIRECTORY_SEPARATOR . 'JOView.php');
+        return new JOView();
     }
 
     /**

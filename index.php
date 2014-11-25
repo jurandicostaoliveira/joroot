@@ -18,7 +18,6 @@ $run->joConfig = array(
     'ROOT' => 'http://local/joroot/', //url do seu projeto 
     'CHARSET' => 'UTF-8', //Charset ultilizado no projeto
     'ROUTE_DEFAULT' => 'home', //Controller que sera carregado inicialmente 
-    'EXTENSION_VIEW' => 'php', //Extensao das views
     'MAX_PARAM' => 5, //Quantidade maxima de parametros que devera ser passados pela url exemplo .: dominio/controller/action/param1/param2 etc.
     'ERROR_REPORTING' => E_ALL, // 0(zero) para esconder E_ALL para mostrar os erros
     'TIMEZONE' => 'America/Sao_Paulo', //Essencial para funcoes de date(),strtotime() etc.

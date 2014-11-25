@@ -26,7 +26,6 @@ class JOBootstrap
     private $joConfigDefault = array(
         'ROOT' => false,
         'ROUTE_DEFAULT' => 'index',
-        'EXTENSION_VIEW' => 'phtml',
         'MAX_PARAM' => 5,
         'ERROR_REPORTING' => E_ALL,
         'CHARSET' => 'UTF-8',
@@ -68,8 +67,11 @@ class JOBootstrap
      * @param String $error
      * @return Page - Pagina que imprime a mensagem de erro  
      */
-    protected static function joError($error = null)
+    public static function joError($error = null)
     {
+        if (!SHOW_MSG_ERROR) {
+            $error = 'N&atilde;o entre em p&acirc;nico, pode ser apenas um erro de rota, verifique a URL digitada!';
+        }
         die(require_once($GLOBALS['JOCOREPATH'] . 'JOError.php'));
     }
 
@@ -128,7 +130,6 @@ class JOBootstrap
             define('VIEWS', 'app/views/');
             define('MODELS', 'app/models/');
             define('ROUTE_DEFAULT', $this->joConfig['ROUTE_DEFAULT']);
-            define('EXTENSION_VIEW', $this->joConfig['EXTENSION_VIEW']);
             define('MAX_PARAM', $this->joConfig['MAX_PARAM']);
             define('SHOW_MSG_ERROR', $this->joConfig['SHOW_MSG_ERROR']);
 

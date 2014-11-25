@@ -3,7 +3,7 @@
 class HomeController extends JOController
 {
 
-    protected $view;
+    private $view;
 
     public function __construct()
     {
@@ -12,8 +12,16 @@ class HomeController extends JOController
 
     public function index()
     {
-        $this->view->joData['conteudo'] = 'Home.php';
-        $this->view->joViewIndex();
+        $this->view->render('index.php', array(
+            'conteudo' => 'Home.php'
+        ));
+    }
+
+    public function test()
+    {
+        $this->view->render('index.phtml', array(
+            'teste' => 'JOROOT'
+        ));
     }
 
 }
