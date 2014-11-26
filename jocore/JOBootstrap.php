@@ -22,8 +22,8 @@ class JOBootstrap
      * Configuracoes das funcionalidades
      * @var array 
      */
-    public $joConfig = array();
-    private $joConfigDefault = array(
+    public $configGeneral = array();
+    private $configGeneralDefault = array(
         'ROOT' => false,
         'ROUTE_DEFAULT' => 'index',
         'MAX_PARAM' => 5,
@@ -37,8 +37,8 @@ class JOBootstrap
      * Configuracoes do banco de dados 
      * @var array
      */
-    public $joDb = array();
-    private $joDbDefault = array(
+    public $configDatabase = array();
+    private $configDatabaseDefault = array(
         'DRIVER' => 'pdo',
         'SGBD' => 'mysql',
         'PORT' => 3306,
@@ -53,8 +53,8 @@ class JOBootstrap
      * Configuracoes de firewalls
      * @var type 
      */
-    public $joFirewall = array();
-    private $joFirewallDefault = array(
+    public $configFirewall = array();
+    private $configFirewallDefault = array(
         'URL_FAILURE' => NULL,
         'INDEX_AUTH' => 'JOROOT_AUTH',
         'INDEX_ROLE' => false,
@@ -90,14 +90,42 @@ class JOBootstrap
      * Dados para efetuar as configuracoes do banco de dados
      * @throws Exception
      */
-    private function joConfigDb()
+    private function getDatabases()
     {
-        foreach ($this->joDb as $key => $vals) {
+        foreach ($this->configDatabase as $key => $vals) {
             if (is_array($vals)) {
-                $this->joDb[$key] = array_merge($this->joDbDefault, $this->joDb[$key]);
+                $this->configDatabase[$key] = array_merge($this->configDatabaseDefault, $this->configDatabase[$key]);
             }
         }
-        return $this->joDb;
+        return $this->configDatabase;
+    }
+
+    /**
+     * Definicao das constatantes
+     */
+    private function setConstants()
+    {
+        define('ROOT', $this->configGeneral['ROOT']);
+        define('CONTROLLERS', 'app/controllers/');
+        define('VIEWS', 'app/views/');
+        define('MODELS', 'app/models/');
+        define('ROUTE_DEFAULT', $this->configGeneral['ROUTE_DEFAULT']);
+        define('MAX_PARAM', $this->configGeneral['MAX_PARAM']);
+        define('SHOW_MSG_ERROR', $this->configGeneral['SHOW_MSG_ERROR']);
+    }
+
+    /**
+     * Prepara os firewalls e os inicia
+     * 
+     * @global array $JOURL
+     */
+    private function getFirewall()
+    {
+        global $JOURL;
+        require_once('JOFirewall.php');
+        $configFirewall = array_merge($this->configFirewallDefault, $this->configFirewall);
+        $firewall = new JOFirewall($configFirewall, "{$JOURL['CONTROLLER']}:{$JOURL['ACTION']}");
+        $firewall->start();
     }
 
     /**
@@ -106,43 +134,37 @@ class JOBootstrap
      * Armazena os dados de saida no buffer	
      * Exibe ou esconde os erros, conforme for configurado 
      */
-    public function joInit()
+    public function run()
     {
         try {
-            $this->joConfig = array_merge($this->joConfigDefault, $this->joConfig);
+            $this->configGeneral = array_merge($this->configGeneralDefault, $this->configGeneral);
 
             /**
-             * Seta o charset das paginas
+             * Especifica o charset das paginas
              */
-            header('Content-Type:text/html; charset=' . $this->joConfig['CHARSET']);
+            header('Content-Type:text/html; charset=' . $this->configGeneral['CHARSET']);
 
             ob_start();
             session_start();
-            error_reporting($this->joConfig['ERROR_REPORTING']);
+            error_reporting($this->configGeneral['ERROR_REPORTING']);
             /**
              * Definido o time zone da regiao, necessario no PHP5.3  
              */
-            date_default_timezone_set($this->joConfig['TIMEZONE']);
+            date_default_timezone_set($this->configGeneral['TIMEZONE']);
 
             /**
              * Verifica a versao do php
              */
             if ((int) substr(phpversion(), 0, 1) < 5) {
-                throw new Exception('Suporte apenas, para vers&otilde;es, iguais ou superiores &agrave; 5.0.0');
+                throw new Exception('Suporte apenas, para vers&otilde;es, iguais ou superiores &agrave; 5.0.0.');
             }
 
-            //$this->joConfig['ROOT'] = ($this->joConfig['ROOT']) ? $this->joConfig['ROOT'] : "http://{$_SERVER['HTTP_HOST']}/joroot/";
-            if (substr($this->joConfig['ROOT'], -1) != '/') {
-                $this->joConfig['ROOT'] = $this->joConfig['ROOT'] . '/';
+            //$this->configGeneral['ROOT'] = ($this->configGeneral['ROOT']) ? $this->configGeneral['ROOT'] : "http://{$_SERVER['HTTP_HOST']}/joroot/";
+            if (substr($this->configGeneral['ROOT'], -1) != '/') {
+                $this->configGeneral['ROOT'] .= '/';
             }
 
-            define('ROOT', $this->joConfig['ROOT']);
-            define('CONTROLLERS', 'app/controllers/');
-            define('VIEWS', 'app/views/');
-            define('MODELS', 'app/models/');
-            define('ROUTE_DEFAULT', $this->joConfig['ROUTE_DEFAULT']);
-            define('MAX_PARAM', $this->joConfig['MAX_PARAM']);
-            define('SHOW_MSG_ERROR', $this->joConfig['SHOW_MSG_ERROR']);
+            $this->setConstants();
 
             /**
              * Objeto JOSystem, funciona como um motor de todo o projeto.
@@ -153,7 +175,7 @@ class JOBootstrap
             $start->joSetUrl();
             $JOURL = $start->joGetUrl();
 
-            $JODB = $this->joConfigDb();
+            $JODB = $this->getDatabases();
             require_once('JOModel.php');
             require_once('JOController.php');
 
@@ -166,7 +188,7 @@ class JOBootstrap
              */
             $action = $start->joAuthAction($controller, $start->joCamelCaseAction($JOURL['ACTION']));
 
-            if (count($this->joFirewall) > 0) {
+            if (count($this->configFirewall) > 0) {
                 $this->getFirewall();
             }
 
@@ -180,21 +202,8 @@ class JOBootstrap
              */
             ob_end_flush();
         } catch (Exception $e) {
-            self::joError($e->getMessage());
+            self::error($e->getMessage());
         }
-    }
-
-    /**
-     * Prepara os firewalls e os inicia
-     * @global array $JOURL
-     */
-    private function getFirewall()
-    {
-        global $JOURL;
-        require_once('JOFirewall.php');
-        $configFirewall = array_merge($this->joFirewallDefault, $this->joFirewall);
-        $firewall = new JOFirewall($configFirewall, "{$JOURL['CONTROLLER']}:{$JOURL['ACTION']}");
-        $firewall->start();
     }
 
 }

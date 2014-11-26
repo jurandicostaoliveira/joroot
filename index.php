@@ -11,11 +11,11 @@
  */
 require 'jocore/JOBootstrap.php';
 
-$run = new JOBootstrap();
+$joroot = new JOBootstrap();
 
 //Configuracoes gerais
-$run->joConfig = array(
-    'ROOT' => $run->getDomain() . '/joroot/', //url do seu projeto 
+$joroot->configGeneral = array(
+    'ROOT' => $joroot->getDomain() . '/joroot/', //url do seu projeto 
     'CHARSET' => 'UTF-8', //Charset ultilizado no projeto
     'ROUTE_DEFAULT' => 'home', //Controller que sera carregado inicialmente 
     'MAX_PARAM' => 5, //Quantidade maxima de parametros que devera ser passados pela url exemplo .: dominio/controller/action/param1/param2 etc.
@@ -25,7 +25,7 @@ $run->joConfig = array(
 );
 
 //Configuracoes de banco de dados
-$run->joDb = array(
+$joroot->configDatabase = array(
     'DB1' => array(
         'DRIVER' => 'pdo',
         'SGBD' => 'mysql',
@@ -40,7 +40,7 @@ $run->joDb = array(
  * Configuracoes do firewall de protecao em paginas
  * - Caso nao queira protecao dos firewalls no sistema retire as configuracoes abaixo
  */
-$run->joFirewall = array(
+$joroot->configFirewall = array(
     'URL_FAILURE' => 'login',
     'INDEX_AUTH' => 'ADMIN_AUTH',
     'INDEX_ROLE' => 'ADMIN_ACCESS',
@@ -54,4 +54,4 @@ $run->joFirewall = array(
     )
 );
 
-$run->joInit();
+$joroot->run();

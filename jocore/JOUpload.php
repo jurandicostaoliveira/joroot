@@ -14,174 +14,168 @@
 class JOUpload
 {
 
-    private $joDir = 'lib/images/';
-
-    /**
-     * Retorna o erro caso houver um.
-     * @param String $error
-     * @return Page - Pagina imprimindo a mensagem de erro  
-     */
-    protected static function joError($error = null)
-    {
-        if (!SHOW_MSG_ERROR) {
-            $error = 'N&atilde;o entre em p&acirc;nico, pode ser apenas um erro de rota, verifique a URL digitada!';
-        }
-        die(require_once($GLOBALS['JOCOREPATH'] . 'JOError.php'));
-    }
+    private $dir = 'lib/images/';
 
     /**
      * Retorna um novo nome aleatorio para o arquivo 
+     * 
      * @param array $file
      * @return String 
      * @throws Exception
      */
-    public function joRandomName($file = null)
+    public function getRandomName($file = null)
     {
         try {
             if (is_array($file)) {
-                return md5(uniqid(rand(), true)) . '.' . self::joFileType($file);
+                return md5(uniqid(rand(), true)) . '.' . $this->getFileExtension($file);
             } else {
-                throw new Exception('Informe os dados do arquivo para processamento do novo nome Ex .: $_FILES[\'arquivo\']');
+                throw new Exception('Informe o arquivo para obter um nome aleat&oacute;rio.');
             }
         } catch (Exception $e) {
-            self::joError($e->getMessage());
+            JOBootstrap::error($e->getMessage());
         }
     }
 
     /**
      * Retorna a extensao do arquivo
+     * 
      * @param array $file
      * @return string
      * @throws Exception
      */
-    public function joFileType($file = null)
+    public function getFileExtension($file = null)
     {
         try {
             if (is_array($file)) {
-                $extension_exp = explode('.', $file['name']);
-                $extension = end($extension_exp);
-                $extension = strtolower($extension);
-                return $extension;
+                $expFile = explode('.', $file['name']);
+                $extension = end($expFile);
+                return strtolower($extension);
             } else {
-                throw new Exception('Informe os dados do arquivo para recuperar o tipo Ex .: $_FILES[\'arquivo\']');
+                throw new Exception('Informe o arquivo para obter sua extens&atilde;o.');
             }
         } catch (Exception $e) {
-            self::joError($e->getMessage());
+            JOBootstrap::error($e->getMessage());
         }
     }
 
     /**
-     * Seta o caminho para armazenar o arquivo  Ex: 'lib/images/subpasta/'
+     * Prepara o caminho para armazenar o arquivo  Ex: 'lib/images/'
      * Por padrao 'lib/images/'
+     * 
      * @param String $dir 
      */
-    public function joSetDir($dir = null)
+    public function setDir($dir = null)
     {
-
-        if ($dir != null) {
-            $this->joDir = $dir;
+        if ($dir !== null) {
+            $this->dir = $dir;
         }
 
-        if (substr($this->joDir, -1) <> '/') {
-            $this->joDir = $this->joDir . '/';
+        if (substr($this->dir, -1) != '/') {
+            $this->dir .= '/';
         }
 
-        if (!file_exists($this->joDir)) {
-            mkdir($this->joDir);
-            chmod($this->joDir, 0777);
+        if (!file_exists($this->dir)) {
+            mkdir($this->dir);
+            chmod($this->dir, 0777);
         }
     }
 
     /**
-     * Redimensiona e envia a imagem para a pasta de destino
-     * Detalhe .: só funciona com .JPG, JPEG, .GIF ou .PNG
-     * @param Array $file = $_FILES['arquivo']
-     * @param Int $width = A largura da nova imagem desejada. 
-     * @param String $filename = O nome da nova imagem(personalizar se quiser)
+     * Redimensiona e envia a imagem para o diretorio de destino
+     * Detalhe .: só funciona com .JPG, .JPEG, .GIF ou .PNG
+     * 
+     * @param array $file = $_FILES['arquivo']
+     * @param int $width = A largura da nova imagem desejada. 
+     * @param string $newName = O nome da nova imagem(personalizar se quiser)
+     * @throws Exception
      */
-    public function joResizeImage($file = null, $width = 100, $filename = false)
+    public function moveResizeImage($file = null, $width = 100, $newName = false)
     {
         try {
             if (is_array($file)) {
-                $name = ($filename) ? $filename : $file['name'];
+                $name = ($newName) ? $newName : $file['name'];
                 //Verifica a extensao da imagem para cria-la
                 switch ($file['type']) {
-                    case 'image/gif': $img = imagecreatefromgif($file['tmp_name']);
+                    case 'image/gif': $image = imagecreatefromgif($file['tmp_name']);
                         break;
-                    case 'image/png': $img = imagecreatefrompng($file['tmp_name']);
+                    case 'image/png': $image = imagecreatefrompng($file['tmp_name']);
                         break;
-                    default: $img = imagecreatefromjpeg($file['tmp_name']);
+                    default: $image = imagecreatefromjpeg($file['tmp_name']);
                         break;
                 }
                 //Obtendo a largura e altura da imagem real
-                $x = imagesx($img);
-                $y = imagesy($img);
+                $x = imagesx($image);
+                $y = imagesy($image);
                 //Obtendo a altura propocional a largura
                 $height = ($width * $y) / $x;
                 //Criando uma nova imagem em branco com as novas dimensoes
-                $new_img = imagecreatetruecolor($width, $height);
+                $newImage = imagecreatetruecolor($width, $height);
                 //copiamos a imagem antiga para a nova 
-                imagecopyresampled($new_img, $img, 0, 0, 0, 0, $width, $height, $x, $y);
+                imagecopyresampled($newImage, $image, 0, 0, 0, 0, $width, $height, $x, $y);
 
                 //Enviando para o diretório de destino
                 switch ($file['type']) {
-                    case 'image/gif': imagegif($new_img, $this->joDir . $name);
+                    case 'image/gif': imagegif($newImage, $this->dir . $name);
                         break;
-                    case 'image/png': imagepng($new_img, $this->joDir . $name);
+                    case 'image/png': imagepng($newImage, $this->dir . $name);
                         break;
-                    default: imagejpeg($new_img, $this->joDir . $name);
+                    default: imagejpeg($newImage, $this->dir . $name);
                         break;
                 }
-                chmod($this->joDir . $name, 0777);
+                chmod($this->dir . $name, 0777);
 
                 //Depois de enviada destroi as imagens
-                imagedestroy($img);
-                imagedestroy($new_img);
+                imagedestroy($image);
+                imagedestroy($newImage);
             } else {
-                throw new Exception('Informe os dados da imagem para o redimensionamento Ex .: $_FILES[\'arquivo\']');
+                throw new Exception('Informe a imagem para o redimensionamento.');
             }
         } catch (Exception $e) {
-            self::joError($e->getMessage());
+            JOBootstrap::error($e->getMessage());
         }
     }
 
     /**
-     * Move o arquivo para a pasta de destino
-     * @param Array $file
-     * @param String $filename 
+     * Rotina para mover arquivo 
+     *
+     * @param array $file
+     * @param string $newName
+     * @throws Exception
      */
-    public function joMoveUpload($file = null, $filename = false)
+    public function moveFile($file = null, $newName = false)
     {
         try {
             if (is_array($file)) {
-                $name = ($filename) ? $filename : $file['name'];
-                if ($file['error'] == 0) {
-                    if (move_uploaded_file($file['tmp_name'], $this->joDir . $name)) {
-                        chmod($this->joDir . $name, 0777);
-                    } else {
-                        throw new Exception('Erro ao tentar enviar o arquivo');
-                    }
+                $name = ($newName) ? $newName : $file['name'];
+                if ((int) $file['error'] === 0) {
+                    move_uploaded_file($file['tmp_name'], $this->dir . $name);
+                    chmod($this->dir . $name, 0777);
                 } else {
-                    throw new Exception('Falha na tentativa de upload');
+                    throw new Exception('Falha ao tentar enviar o arquivo.');
                 }
             } else {
-                throw new Exception('Informe os dados do arquivo para o envio Ex .: $_FILES[\'arquivo\']');
+                throw new Exception('Informe o arquivo para ser enviado.');
             }
         } catch (Exception $e) {
-            self::joError($e->getMessage());
+            JOBootstrap::error($e->getMessage());
         }
     }
 
     /**
-     * Para remover arquivos em diretorios que tenha permissao 777
-     * @param String $filename
+     * Rotina para remover arquivo
+     * 
+     * @param string $filename
      */
-    public function joRemoveFile($filename = null)
+    public function removeFile($filename = null)
     {
-        if (($filename != null) && (file_exists($filename))) {
-            unlink($filename);
-        } else {
-            self::joError("O arquivo {$filename} n&atilde;o foi encontrado");
+        try {
+            if (($filename !== null) && (file_exists($filename))) {
+                unlink($filename);
+            } else {
+                throw new Exception("O arquivo {$filename}, n&atilde;o foi encontrado.");
+            }
+        } catch (Exception $e) {
+            JOBootstrap::error($e->getMessage());
         }
     }
 

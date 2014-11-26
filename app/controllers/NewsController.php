@@ -110,18 +110,16 @@ class NewsController extends JOController
             $allowed = array('jpg', 'jpeg', 'gif', 'png');
 
             if ((int) $image['size'] > 1000024) {//1000024 eq 1MB
-                throw new Exception('Arquivo muito pesado, máximo permitido : 1MB');
-            } else if (array_search($this->upload->joFileType($image), $allowed) === false) {
-                throw new Exception('Só são permitidos arquivos .JPG, .GIF, .PNG');
+                throw new Exception('Arquivo muito pesado, máximo permitido : 1MB.');
+            } else if (array_search($this->upload->getFileExtension($image), $allowed) === false) {
+                throw new Exception('Só são permitidos arquivos .JPG, .GIF, .PNG.');
             } else {
-                $newName = $this->upload->joRandomName($image); //Gera um novo nome randomico para nao sobre escrever
-                $this->upload->joSetDir('lib/images/'); //Diretorio de destino
-                $this->upload->joResizeImage($image, 100, $newName); //Redimensiona a imagem
+                $newName = $this->upload->getRandomName($image); //Gera um novo nome randomico para nao sobre escrever
+                $this->upload->setDir('lib/images/'); //Diretorio de destino
+                $this->upload->moveResizeImage($image, 100, $newName); //Redimensiona a imagem
                 $this->model->updateImage($id, $newName); //Salva no banco
-                throw new Exception('A Imagem foi alterada com sucesso');
+                throw new Exception('A Imagem foi alterada com sucesso.');
             }
-
-            unset($id, $image, $allowed, $newName);
         } catch (Exception $e) {
             return $e->getMessage();
         }
@@ -130,12 +128,11 @@ class NewsController extends JOController
     public function remove()
     {
         $id = (int) $this->request->getParam(1);
-        
         if ($id > 0) {
             $this->removeImage($id); //Excluindo a imagem
             $this->model->remove($id); //Excluindo o registro
         }
-        
+
         $this->request->redirect(ROOT . 'news/list-all');
     }
 
@@ -147,7 +144,7 @@ class NewsController extends JOController
     {
         $name = $this->model->imageName($id);
         if ($name != 'temp.png') {
-            $this->upload->joRemoveFile('lib/images/' . $name);
+            $this->upload->removeFile('lib/images/' . $name);
         }
     }
 
