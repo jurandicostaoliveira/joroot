@@ -72,8 +72,8 @@ abstract class JOController
      * OU
      * 
      * APP@caminho/do/arquivo a partir do diretorio app/
-     * CONTROLLER@caminho/do/arquivo a partir do diretorio app/controllers/
-     * MODEL@caminho/do/arquivo a partir do diretorio app/models/
+     * CONTROLLER@nomeDoController (sem o sufixo Controller) a partir do diretorio app/controllers/
+     * MODEL@nomeDoModel (sem o sufixo Model) a partir do diretorio app/models/
      * 
      * @param array $options
      */
