@@ -1,3 +1,3 @@
-Necessário:
-# instalação do PHP 5 ou superior
-# Módulo rewrite do apache, deverá está habilitado 
+#Necessário:
+- Instalação do PHP 5 ou superior.
+- O módulo rewrite do apache, deverá está habilitado. 
