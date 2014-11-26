@@ -9,7 +9,7 @@ class NewsController extends JOController
     {
         parent::get(array(
             'JORequest',
-            'MODEL@NewsModel',
+            'MODEL@News',
             'JOUpload',
             'JOView'
         ));

@@ -17,7 +17,8 @@ class JOSession
     private $index = 'JOROOT';
 
     /**
-     * Prepara o um indice para a sessao
+     * Preparar um indice para a sessao
+     * 
      * @param string $index
      * @return \JOSession
      */
@@ -28,7 +29,8 @@ class JOSession
     }
 
     /**
-     * Verifica a existencia do indice informado 
+     * Verificar a existencia do indice informado 
+     * 
      * @param string $index
      * @return boolean
      */
@@ -38,7 +40,8 @@ class JOSession
     }
 
     /**
-     * Recupera o valor do indice da sessao
+     * Recuperar o valor do indice da sessao
+     * 
      * @return int, string, array, boolean etc
      */
     public function get()
@@ -49,7 +52,8 @@ class JOSession
     }
 
     /**
-     * Persiste o valores
+     * Persistir o valores
+     * 
      * @param int, string, array, boolean etc $value
      */
     public function set($value = null)
@@ -58,7 +62,8 @@ class JOSession
     }
 
     /**
-     * Adiciona novos valores
+     * Adicionar novos valores
+     * 
      * @param int, string, array, boolean etc $value
      */
     public function add($value = null)
@@ -87,7 +92,8 @@ class JOSession
     }
 
     /**
-     * @Especifico para processo de autenticacao, chega se existe indices criados na sessao 
+     * Especifico para processo de autenticacao, chega se existe indices criados na sessao 
+     * 
      * @param array $value
      * @return boolean
      */
@@ -95,8 +101,8 @@ class JOSession
     {
         $result = true;
         if (is_array($value)) {
-            while (list($k, $v) = each($value)) {
-                if (!isset($_SESSION[$this->index][$v])) {
+            foreach ($value as $key => $val) {
+                if (!isset($_SESSION[$this->index][$val])) {
                     $result = false;
                 }
             }
@@ -111,7 +117,8 @@ class JOSession
     }
 
     /**
-     * Compara a existencia de valor(es) em algum indice da sessao
+     * Comparar a existencia de valor(es) em algum indice da sessao
+     * 
      * @param int, string $index
      * @param array $values
      * @return boolean

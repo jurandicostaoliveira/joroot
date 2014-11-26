@@ -45,7 +45,7 @@ class JOFirewall extends JOController
         $isRequiredRoute = isset($this->requiredAccess[$this->urlCurrent]) ? true : false;
         if ($isRequiredRoute) {
             if (!$this->checkCredentials() || !$this->checkPermission()) {
-                $this->request->joRedirect(ROOT . $this->urlFailure);
+                $this->request->redirect(ROOT . $this->urlFailure);
             }
         }
     }

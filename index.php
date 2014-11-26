@@ -9,14 +9,14 @@
  * @version     1.5.0
  * @license     Gratuito para estudo, desenvolvimento e contribuicao
  */
-require 'jocore/JOBootstrap.php';
+require 'core/JOBootstrap.php';
 
 $joroot = new JOBootstrap();
 
 //Configuracoes gerais
 $joroot->configGeneral = array(
     'ROOT' => $joroot->getDomain() . '/joroot/', //url do seu projeto 
-    'CHARSET' => 'UTF-8', //Charset ultilizado no projeto
+    'CHARSET' => 'utf-8', //Charset ultilizado no projeto
     'ROUTE_DEFAULT' => 'home', //Controller que sera carregado inicialmente 
     'MAX_PARAM' => 5, //Quantidade maxima de parametros que devera ser passados pela url exemplo .: dominio/controller/action/param1/param2 etc.
     'ERROR_REPORTING' => E_ALL, // 0(zero) para esconder E_ALL para mostrar os erros
@@ -27,8 +27,7 @@ $joroot->configGeneral = array(
 //Configuracoes de banco de dados
 $joroot->configDatabase = array(
     'DB1' => array(
-        'DRIVER' => 'pdo',
-        'SGBD' => 'mysql',
+        'DRIVER' => 'mysql',
         'HOSTNAME' => 'localhost',
         'USERNAME' => 'root',
         'PASSWORD' => '123456',
@@ -43,14 +42,14 @@ $joroot->configDatabase = array(
 $joroot->configFirewall = array(
     'URL_FAILURE' => 'login',
     'INDEX_AUTH' => 'ADMIN_AUTH',
-    'INDEX_ROLE' => 'ADMIN_ACCESS',
+    'INDEX_ROLE' => 'ADMIN_ROLE',
     'REQUIRED_CREDENTIALS' => array('ADMIN_EMAIL', 'ADMIN_PASSWORD'),
     'REQUIRED_ACCESS' => array(
-        'noticias:listar' => array(1, 2, 3),
-        'noticias:editar' => array(1, 2),
-        'noticias:excluir' => array(1, 3, 5),
-        'noticias:editar-imagem' => array(1, 3, 4),
-        'noticias:upload-imagem' => array(1)
+        'news:list-all' => array('ADMIN'),
+        'news:edit-image' => array('ADMIN'),
+        'news:add' => array('ADMIN'),
+        'news:edit' => array('ADMIN'),
+        'news:remove' => array('ADMIN')
     )
 );
 

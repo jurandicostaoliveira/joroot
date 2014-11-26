@@ -31,10 +31,10 @@ abstract class JOController
             $response->className = str_replace('APP@', '', $filename);
             $response->fileName = "app/{$response->className}.php";
         } else if (preg_match('/^CONTROLLER@/', $filename)) {
-            $response->className = str_replace('CONTROLLER@', '', $filename);
+            $response->className = str_replace('CONTROLLER@', '', $filename) . 'Controller';
             $response->fileName = CONTROLLERS . "{$response->className}.php";
         } else if (preg_match('/^MODEL@/', $filename)) {
-            $response->className = str_replace('MODEL@', '', $filename);
+            $response->className = str_replace('MODEL@', '', $filename) . 'Model';
             $response->fileName = MODELS . "{$response->className}.php";
         }
 
@@ -57,16 +57,17 @@ abstract class JOController
     /**
      * Rotina para incluir classes predefinidas ou nao
      * 
-     * JOView
-     * JOSession
-     * JOValidate
-     * JOPaginate
-     * JOUpload
+     * JOAuthentication
+     * JODownload
+     * JOHtml
      * JOLog
      * JOMail
-     * JOHtml
-     * JODownload
+     * JOPagination
      * JORequest
+     * JOSession
+     * JOUpload
+     * JOValidate
+     * JOView
      * 
      * OU
      * 

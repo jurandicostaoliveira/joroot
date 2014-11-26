@@ -13,7 +13,6 @@
  */
 $JOURL = array();
 $JODB = array();
-$JOCOREPATH = __DIR__ . DIRECTORY_SEPARATOR;
 
 class JOBootstrap
 {
@@ -39,8 +38,7 @@ class JOBootstrap
      */
     public $configDatabase = array();
     private $configDatabaseDefault = array(
-        'DRIVER' => 'pdo',
-        'SGBD' => 'mysql',
+        'DRIVER' => 'mysql',
         'PORT' => 3306,
         'HOSTNAME' => 'localhost',
         'USERNAME' => 'root',
@@ -90,7 +88,7 @@ class JOBootstrap
      * Dados para efetuar as configuracoes do banco de dados
      * @throws Exception
      */
-    private function getDatabases()
+    private function setDatabases()
     {
         foreach ($this->configDatabase as $key => $vals) {
             if (is_array($vals)) {
@@ -119,13 +117,23 @@ class JOBootstrap
      * 
      * @global array $JOURL
      */
-    private function getFirewall()
+    private function setFirewall()
     {
         global $JOURL;
         require_once('JOFirewall.php');
         $configFirewall = array_merge($this->configFirewallDefault, $this->configFirewall);
         $firewall = new JOFirewall($configFirewall, "{$JOURL['CONTROLLER']}:{$JOURL['ACTION']}");
         $firewall->start();
+    }
+
+    /**
+     * Verifica a versao do php
+     */
+    private function checkPhpVersion()
+    {
+        if ((int) substr(phpversion(), 0, 1) < 5) {
+            throw new Exception('Suporte apenas, para vers&otilde;es, iguais ou superiores &agrave; 5.0.0.');
+        }
     }
 
     /**
@@ -138,44 +146,24 @@ class JOBootstrap
     {
         try {
             $this->configGeneral = array_merge($this->configGeneralDefault, $this->configGeneral);
-
-            /**
-             * Especifica o charset das paginas
-             */
             header('Content-Type:text/html; charset=' . $this->configGeneral['CHARSET']);
-
             ob_start();
             session_start();
             error_reporting($this->configGeneral['ERROR_REPORTING']);
-            /**
-             * Definido o time zone da regiao, necessario no PHP5.3  
-             */
             date_default_timezone_set($this->configGeneral['TIMEZONE']);
 
-            /**
-             * Verifica a versao do php
-             */
-            if ((int) substr(phpversion(), 0, 1) < 5) {
-                throw new Exception('Suporte apenas, para vers&otilde;es, iguais ou superiores &agrave; 5.0.0.');
-            }
-
-            //$this->configGeneral['ROOT'] = ($this->configGeneral['ROOT']) ? $this->configGeneral['ROOT'] : "http://{$_SERVER['HTTP_HOST']}/joroot/";
             if (substr($this->configGeneral['ROOT'], -1) != '/') {
                 $this->configGeneral['ROOT'] .= '/';
             }
 
             $this->setConstants();
+            $this->checkPhpVersion();
 
-            /**
-             * Objeto JOSystem, funciona como um motor de todo o projeto.
-             */
             global $JOURL, $JODB;
             require_once('JOSystem.php');
-            $start = new JOSystem();
-            $start->joSetUrl();
-            $JOURL = $start->joGetUrl();
-
-            $JODB = $this->getDatabases();
+            $system = new JOSystem();
+            $JOURL = $system->getUrl();
+            $JODB = $this->setDatabases();
             require_once('JOModel.php');
             require_once('JOController.php');
 
@@ -183,23 +171,14 @@ class JOBootstrap
             $controller .= 'Controller';
             require_once(CONTROLLERS . $controller . '.php');
 
-            /**
-             * Configura o controller requisitado e checa a action
-             */
-            $action = $start->joAuthAction($controller, $start->joCamelCaseAction($JOURL['ACTION']));
+            $action = $system->authAction($controller, $system->getCamelCaseAction($JOURL['ACTION']));
 
             if (count($this->configFirewall) > 0) {
-                $this->getFirewall();
+                $this->setFirewall();
             }
-
-            /**
-             * Instacia o objeto e executa o metodo(action)
-             */
-            $view = new $controller();
-            $view->$action();
-            /**
-             * Envia e apaga o buffer;
-             */
+            
+            $exec = new $controller();
+            $exec->$action();
             ob_end_flush();
         } catch (Exception $e) {
             self::error($e->getMessage());

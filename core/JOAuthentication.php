@@ -74,7 +74,7 @@ class JOAuthentication extends JOModel
      */
     public function setConnector($strConnect = NULL)
     {
-        $this->pdo = parent::joConnector($strConnect)->joOpen();
+        $this->pdo = parent::getDatabaseAdapter($strConnect);
         return $this;
     }
 

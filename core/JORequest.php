@@ -99,7 +99,7 @@ class JORequest
      * @param int $key
      * @return string or int
      */
-    public function getParam($key = null)
+    public function getParam($key = 1)
     {
         $value = null;
         if (($key !== null) && (is_numeric($key))) {

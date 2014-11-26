@@ -15,7 +15,7 @@ class LogoutController extends JOController
         
         //$session->destroy();
         $session->index('ADMIN_AUTH')->remove();
-        $request->joRedirect(ROOT);
+        $request->redirect(ROOT);
     }
 
 }

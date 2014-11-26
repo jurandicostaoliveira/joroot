@@ -8,20 +8,14 @@ class NewsModel extends JOModel
     public function __construct()
     {
         /**
-         * Modelo de conexao usando o PDO
-         * Recomendo ultilizar a camada de abstracao PDO e melhor em tudo
+         * Conexao usando o PDO
          * http://php.net/manual/en/book.pdo.php 
          */
-        $this->pdo = parent::joConnector('DB1')->joOpen();
-
-        /**
-         * Modelo de conexao usando o velho mysql_connect()
-         * $this->pdo = parent::joConnector('DB1');
-         */
+        $this->pdo = parent::getDatabaseAdapter('DB1');
     }
 
     public function listAll()
-    {
+    {   
         $qry = $this->pdo->query("SELECT * FROM `news`;");
         return $qry->fetchAll(PDO::FETCH_ASSOC);
     }

@@ -1,8 +1,16 @@
 <div style="float: left;">
-    <form method="post" action="login/check">
+    <form name="formLogin" method="post" action="login/check" onsubmit="return requiredFormLogin();">
         <table border="1" width="100%">
             <tr>
                 <th colspan="2">Formul&aacute;rio de login</th>
+            </tr>
+            <tr>
+                <td colspan="2" height="100">
+                    E-mail = <strong>admin@joroot.com.br</strong><br />
+                    Senha = <strong>123456</strong>
+                    <br /><br />
+                    <font color="#FF0000" size="2"><?php echo $message; ?></font>
+                </td>
             </tr>
             <tr>
                 <td>E-mail : </td>
@@ -13,7 +21,7 @@
             <tr>
                 <td>Senha : </td>
                 <td>
-                    <input type="password" name="senha" value="123456" />
+                    <input type="password" name="password" value="123456" />
                 </td>
             </tr>
             <tr>
