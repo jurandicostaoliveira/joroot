@@ -42,23 +42,26 @@ abstract class JOModel
     }
 
     /**
-     * Prepara os valores dinamicos, para a clausula (SQL) LIMIT ultizanda em paginacao de resultados
+     * Preparar os valores dinamicos, para a clausula (SQL) LIMIT utilizada em paginacao de resultados
      * 
      * @global array $JOURL
      * @param int $numParam
-     * @param int $limitPage
-     * @return straing
+     * @param int $limitResult
+     * @return string
      */
-    public function getLimitPaginate($numParam = 1, $limitPage = 20)
+    public function getLimitPagination($numParam = 1, $limitResult = 20)
     {
         global $JOURL;
         $end = 1;
-        if ($JOURL['PARAM' . $numParam]) {
+
+        if (isset($JOURL['PARAM' . $numParam])) {
             $param = (int) $JOURL['PARAM' . $numParam];
             $end = ($param <= 0) ? 1 : $param; //Conversao de 0 para 1
         }
-        $start = ($end * $limitPage) - $limitPage;
-        return "{$start}, {$limitPage}";
+
+        $limitResult = (int) $limitResult;
+        $start = ($end * $limitResult) - $limitResult;
+        return "{$start}, {$limitResult}";
     }
 
 }
