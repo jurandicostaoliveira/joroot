@@ -90,9 +90,9 @@ class JOBootstrap
      */
     private function setDatabases()
     {
-        foreach ($this->configDatabase as $key => $vals) {
-            if (is_array($vals)) {
-                $this->configDatabase[$key] = array_merge($this->configDatabaseDefault, $this->configDatabase[$key]);
+        foreach ($this->configDatabase as $key => $values) {
+            if (is_array($values)) {
+                $this->configDatabase[$key] = array_merge($this->configDatabaseDefault, $values);
             }
         }
         return $this->configDatabase;
