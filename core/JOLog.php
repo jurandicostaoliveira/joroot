@@ -35,7 +35,8 @@ class JOLog
     }
 
     /**
-     * Cria, e escreve no arquivo
+     * Cria e escreve no arquivo
+     * 
      * @param String $message = mensagem de personalizacao : email@email.com.br
      */
     public function write($message = null)

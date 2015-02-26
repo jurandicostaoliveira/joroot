@@ -26,9 +26,9 @@ class JOHtml
      */
     private function setAtributes($attr)
     {
-        $setAttr = (is_array($attr)) ? $attr : array();
-        while (list($key, $val) = each($setAttr)) {
-            $this->attr .= " {$key}=\"{$val}\"";
+        $_attr = (is_array($attr)) ? $attr : array();
+        foreach ($_attr as $key => $value) {
+            $this->attr .= " {$key}=\"{$value}\"";
         }
     }
 

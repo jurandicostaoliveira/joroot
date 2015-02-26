@@ -52,6 +52,7 @@ class JOFirewall extends JOController
 
     /**
      * Verifica se as credenciais estao ativas
+     * 
      * @return boolean
      */
     private function checkCredentials()
@@ -65,6 +66,7 @@ class JOFirewall extends JOController
 
     /**
      * Verifica a permissao do usuario ao acessar a url  
+     * 
      * @return boolean
      */
     private function checkPermission()
