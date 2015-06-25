@@ -13,6 +13,7 @@
  */
 class JOView
 {
+
     /**
      * Rotina que verifica se ha o prefixo @
      * caso houver ele busca pelo o caminho absoluto
@@ -55,6 +56,16 @@ class JOView
         } catch (Exception $e) {
             JOBootstrap::error($e->getMessage());
         }
+    }
+
+    /**
+     * Rotina exibe o array no formato JSON
+     * 
+     * @param array $data
+     */
+    public function json($data = array())
+    {
+        echo json_encode($data);
     }
 
 }
