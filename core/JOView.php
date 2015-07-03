@@ -65,7 +65,9 @@ class JOView
      */
     public function json($data = array())
     {
-        echo json_encode($data);
+        if (is_array($data)) {
+            echo json_encode($data);
+        }
     }
 
 }
