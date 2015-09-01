@@ -65,7 +65,7 @@ class JOBootstrap
      * @param String $error
      * @return Page - Pagina que imprime a mensagem de erro  
      */
-    public static function error($error = null)
+    public static function error($error = null, $urlBack = ROOT)
     {
         if (!SHOW_MSG_ERROR) {
             $error = 'N&atilde;o entre em p&acirc;nico, pode ser apenas um erro de rota, verifique a URL digitada!';
@@ -90,9 +90,9 @@ class JOBootstrap
      */
     private function setDatabases()
     {
-        foreach ($this->configDatabase as $key => $values) {
-            if (is_array($values)) {
-                $this->configDatabase[$key] = array_merge($this->configDatabaseDefault, $values);
+        foreach ($this->configDatabase as $key => $vals) {
+            if (is_array($vals)) {
+                $this->configDatabase[$key] = array_merge($this->configDatabaseDefault, $this->configDatabase[$key]);
             }
         }
         return $this->configDatabase;
@@ -122,7 +122,7 @@ class JOBootstrap
         global $JOURL;
         require_once('JOFirewall.php');
         $configFirewall = array_merge($this->configFirewallDefault, $this->configFirewall);
-        $firewall = new JOFirewall($configFirewall, "{$JOURL['CONTROLLER']}:{$JOURL['ACTION']}");
+        $firewall = new JOFirewall($configFirewall, "{$JOURL['ROUTE_CONTROLLER']}:{$JOURL['ROUTE_ACTION']}");
         $firewall->start();
     }
 
@@ -167,16 +167,14 @@ class JOBootstrap
             require_once('JOModel.php');
             require_once('JOController.php');
 
-            $controller = ucfirst($JOURL['CONTROLLER']);
-            $controller .= 'Controller';
+            $controller = "{$JOURL['CONTROLLER']}Controller";
             require_once(CONTROLLERS . $controller . '.php');
-
-            $action = $system->authAction($controller, $system->getCamelCaseAction($JOURL['ACTION']));
+            $action = $system->authAction($controller, $JOURL['ACTION']);
 
             if (count($this->configFirewall) > 0) {
                 $this->setFirewall();
             }
-            
+
             $exec = new $controller();
             $exec->$action();
             ob_end_flush();

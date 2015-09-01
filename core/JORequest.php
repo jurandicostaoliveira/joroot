@@ -115,9 +115,10 @@ class JORequest
      */
     public function getParams()
     {
+        $shift = array('CONTROLLER', 'ROUTE_CONTROLLER', 'ACTION', 'ROUTE_ACTION');
         $values = array();
         foreach ($this->joUrl as $key => $value) {
-            if (($key !== 'CONTROLLER') && ($key !== 'ACTION')) {
+            if (!in_array($key, $shift)) {
                 $values[] = self::setAntiInjection($value);
             }
         }

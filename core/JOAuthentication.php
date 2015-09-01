@@ -125,7 +125,7 @@ class JOAuthentication extends JOModel
      */
     public function isRegistered()
     {
-        $qry = $this->pdo->prepare("SELECT COUNT(*) AS total FROM `{$this->tableName}` {$this->select};");
+        $qry = $this->pdo->prepare("SELECT COUNT(*) AS total FROM {$this->tableName} {$this->select};");
         foreach ($this->arrayWhere as $name => $value) {
             $qry->bindValue(":{$name}", $value);
         }
@@ -141,7 +141,7 @@ class JOAuthentication extends JOModel
      */
     public function getData()
     {
-        $qry = $this->pdo->prepare("SELECT * FROM `{$this->tableName}` {$this->select};");
+        $qry = $this->pdo->prepare("SELECT * FROM {$this->tableName} {$this->select};");
         foreach ($this->arrayWhere as $name => $value) {
             $qry->bindValue(":{$name}", $value);
         }

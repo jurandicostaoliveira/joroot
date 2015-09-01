@@ -34,8 +34,10 @@ class JOSystem
     public function getUrl()
     {
         $this->prepareUrl();
+        $url['ROUTE_CONTROLLER'] = $this->url[0];
+        $url['ROUTE_ACTION'] = $this->getAction();
         $url['CONTROLLER'] = $this->getController();
-        $url['ACTION'] = $this->getAction();
+        $url['ACTION'] = $this->getCamelCaseAction($url['ROUTE_ACTION']);
         $maxParam = intval(MAX_PARAM) + 1;
         //Montagem dos parametros
         for ($i = 1; $i < $maxParam; ++$i) {
@@ -54,14 +56,28 @@ class JOSystem
     private function getController()
     {
         try {
-            if (file_exists(CONTROLLERS . ucfirst($this->url[0]) . 'Controller.php')) {
-                return $this->url[0];
+            $controllerCamelCase = $this->getCamelCaseController($this->url[0]);
+            if (file_exists(CONTROLLERS . $controllerCamelCase . 'Controller.php')) {
+                return $controllerCamelCase;
             } else {
-                throw new Exception('O arquivo ' . CONTROLLERS . ucfirst($this->url[0]) . 'Controller.php n&atilde;o foi encontrado.');
+                throw new Exception('O arquivo ' . CONTROLLERS . $controllerCamelCase . 'Controller.php n&atilde;o foi encontrado.');
             }
         } catch (Exception $e) {
             JOBootstrap::error($e->getMessage());
         }
+    }
+
+    /**
+     * Retorna o controller no formato camelCase
+     * 
+     * @param string $controller
+     */
+    private function getCamelCaseController($controller)
+    {
+        $controllerCamelCase = preg_replace_callback('/[-_](.)/', function ($matches) {
+            return strtoupper($matches[1]);
+        }, $controller);
+        return ucfirst($controllerCamelCase);
     }
 
     /**
