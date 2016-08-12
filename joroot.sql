@@ -37,5 +37,5 @@ CREATE TABLE IF NOT EXISTS `joroot`.`admin` (
 -- Extraindo dados da tabela `admin`
 --
 
-INSERT INTO `admin` (`id`, `name`, `email`, `password`, `plain_password`, `role`, `status`, `last_ip`, `date_created`, `date_last_logged`) VALUES
+INSERT INTO `joroot`.`admin` (`id`, `name`, `email`, `password`, `plain_password`, `role`, `status`, `last_ip`, `date_created`, `date_last_logged`) VALUES
 (1, 'Administrador', 'admin@joroot.com.br', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'MTIzNDU2', 'ADMIN', 'A', '127.0.0.1', '2014-10-16 17:18:15', NULL);
