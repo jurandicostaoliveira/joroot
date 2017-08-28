@@ -113,20 +113,6 @@ class JOBootstrap
     }
 
     /**
-     * Prepara os firewalls e os inicia
-     * 
-     * @global array $JOURL
-     */
-    private function setFirewall()
-    {
-        global $JOURL;
-        require_once('JOFirewall.php');
-        $configFirewall = array_merge($this->configFirewallDefault, $this->configFirewall);
-        $firewall = new JOFirewall($configFirewall, "{$JOURL['ROUTE_CONTROLLER']}:{$JOURL['ROUTE_ACTION']}");
-        $firewall->start();
-    }
-
-    /**
      * Verifica a versao do php
      */
     private function checkPhpVersion()
@@ -134,6 +120,22 @@ class JOBootstrap
         if ((int) substr(phpversion(), 0, 1) < 5) {
             throw new Exception('Suporte apenas, para vers&otilde;es, iguais ou superiores &agrave; 5.0.0.');
         }
+    }
+
+    /**
+     * Prepara os firewalls e os inicia
+     * 
+     * @global array $JOURL
+     */
+    private function loadFirewall()
+    {
+        global $JOURL;
+        if (count($this->configFirewall) > 0) {
+            require_once('JOFirewall.php');
+            $configFirewall = array_merge($this->configFirewallDefault, $this->configFirewall);
+            $firewall = new JOFirewall($configFirewall, "{$JOURL['ROUTE_CONTROLLER']}:{$JOURL['ROUTE_ACTION']}");
+            $firewall->start();
+	}
     }
 	
     /**
@@ -187,11 +189,9 @@ class JOBootstrap
             require_once(CONTROLLERS . $controller . '.php');
             $action = $system->authAction($controller, $JOURL['ACTION']);
 
-            if (count($this->configFirewall) > 0) {
-                $this->setFirewall();
-            }
+	    $this->loadFirewall();		
+	    $this->loadExtraFiles($files);
 		
-	    $this->loadExtraFiles($files);		
             $exec = new $controller();
             $exec->$action();
             ob_end_flush();
