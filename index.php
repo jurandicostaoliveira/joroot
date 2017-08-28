@@ -9,7 +9,7 @@
  * @version     1.5.0
  * @license     Gratuito para estudo, desenvolvimento e contribuicao
  */
-require 'core/JOBootstrap.php';
+require __DIR__ . '/core/JOBootstrap.php';
 
 $joroot = new JOBootstrap();
 

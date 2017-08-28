@@ -135,14 +135,30 @@ class JOBootstrap
             throw new Exception('Suporte apenas, para vers&otilde;es, iguais ou superiores &agrave; 5.0.0.');
         }
     }
+	
+    /**
+    * Carregamento de arquivos extras
+    *
+    * @param array $files
+    */ 		
+    private function loadExtraFiles(array $files = array())
+    {
+	$dir = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR;
+	foreach($files as $file) {
+	   if(file_exists($dir . $file)){
+	   	require_once($dir . $file);
+	   }	
+	}
+    }
 
     /**
      * Dispara a execucao da aplicacao 
      * Inicia a sessao
      * Armazena os dados de saida no buffer	
      * Exibe ou esconde os erros, conforme for configurado 
+     * @param array $files		
      */
-    public function run()
+    public function run(array $files = array())
     {
         try {
             $this->configGeneral = array_merge($this->configGeneralDefault, $this->configGeneral);
@@ -174,7 +190,8 @@ class JOBootstrap
             if (count($this->configFirewall) > 0) {
                 $this->setFirewall();
             }
-
+		
+	    $this->loadExtraFiles($files);		
             $exec = new $controller();
             $exec->$action();
             ob_end_flush();
